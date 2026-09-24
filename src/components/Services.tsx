@@ -11,7 +11,7 @@ const num = (i: number) => String(i + 1).padStart(2, "0");
 
 function Detail({ s }: { s: Service }) {
   return (
-    <div className="grid gap-6 md:grid-cols-8 md:gap-8">
+    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-8 md:gap-8">
       <div className="md:col-span-5">
         <h3 className="t-h3">{s.name}</h3>
         <p className="mt-3 max-w-[46ch] text-muted">{s.line}</p>
@@ -48,7 +48,7 @@ function MobileBlock({ s, i }: { s: Service; i: number }) {
     ScrollTrigger.create({ trigger: ref.current, start: "top 75%", once: true, onEnter: () => setInView(true) });
   }, { scope: ref });
   return (
-    <article ref={ref} className="border-t border-line pt-6">
+    <article ref={ref} className="min-w-0 border-t border-line pt-6">
       <p className="t-label text-orange">{num(i)}</p>
       <div className="mt-4 aspect-[4/3] border border-line bg-surface sm:aspect-[16/10]">
         <Visual play={inView} />
@@ -141,7 +141,7 @@ export function Services() {
             ))}
           </ol>
           <div className="col-span-8 flex flex-col gap-7">
-            <div className="aspect-[16/9] max-h-[52svh] w-full border border-line bg-surface">
+            <div className="h-[min(50svh,440px)] w-full border border-line bg-surface">
               <Visual key={s.key} play={seen} />
             </div>
             <div className="svc-detail">
@@ -152,7 +152,7 @@ export function Services() {
       </div>
 
       {/* Mobile, tablet */}
-      <div className="wrap grid gap-14 pb-24 pt-12 lg:hidden">
+      <div className="wrap grid grid-cols-[minmax(0,1fr)] gap-14 pb-24 pt-12 lg:hidden">
         {services.map((svc, i) => (
           <MobileBlock key={svc.key} s={svc} i={i} />
         ))}

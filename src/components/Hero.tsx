@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { noisePosts } from "@/lib/content";
 import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
-import { FeedCard } from "./FeedCard";
+import { FeedCard, PostFrame } from "./FeedCard";
 import { ScrollStopper } from "./ScrollStopper";
 
 const introFeed = noisePosts.map((title, i) => ({
@@ -101,11 +101,13 @@ export function Hero() {
                 <FeedCard item={item} />
               </div>
             ))}
-            <div className="intro-stop @container flex aspect-[4/5] w-full shrink-0 flex-col justify-between bg-orange p-[8cqw] text-on-orange">
-              <p className="t-label text-[3.4cqw]">JustCliks</p>
-              <p className="font-display text-[17cqw] font-extrabold leading-[0.98] tracking-[-0.035em]">
-                Worth the stop.
-              </p>
+            <div className="intro-stop aspect-[4/5] w-full shrink-0">
+              <PostFrame className="bg-orange text-on-orange">
+                <p className="t-label text-[3.6cqw]">JustCliks</p>
+                <p className="font-display text-[17cqw] font-extrabold leading-[0.98] tracking-[-0.035em]">
+                  Worth the stop.
+                </p>
+              </PostFrame>
             </div>
           </div>
           <div className="intro-flash pointer-events-none absolute inset-x-0 top-1/2 aspect-[4/5] -translate-y-1/2 bg-fg opacity-0" />

@@ -10,7 +10,7 @@ export function MediaSlot({ media, alt }: { media: Media; alt: string }) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="relative h-full w-full bg-paper-2" aria-busy={!loaded && !failed}>
+    <div className="relative h-full w-full bg-surface" aria-busy={!loaded && !failed}>
       {!loaded && !failed && <div aria-hidden className="skeleton absolute inset-0" />}
       {failed && (
         <p className="absolute inset-0 grid place-items-center p-6 text-center text-sm text-muted">

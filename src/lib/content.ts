@@ -190,14 +190,14 @@ export type FeedItem = {
 const clientPosts: FeedItem[] = [
   { kind: "client", title: "Aasife and Brothers Biriyani", tag: "Social media", tone: "accent", tamil: "பிரியாணி" },
   { kind: "client", title: "LIK", tag: "Influencer campaign", tone: "ink" },
-  { kind: "client", title: "Tamil Christian song", tag: "Video production", tone: "paper", tamil: "பாடல்" },
-  { kind: "client", title: "Joel Prince", tag: "Personal branding", tone: "accent" },
-  { kind: "client", title: "Meenakshi Catering", tag: "Social media", tone: "ink" },
-  { kind: "client", title: "Senthil Balaji", tag: "Influencer campaign", tone: "paper" },
+  { kind: "client", title: "Tamil Christian song", tag: "Video production", tone: "accent", tamil: "பாடல்" },
+  { kind: "client", title: "Joel Prince", tag: "Personal branding", tone: "ink" },
+  { kind: "client", title: "Meenakshi Catering", tag: "Social media", tone: "accent" },
+  { kind: "client", title: "Senthil Balaji", tag: "Influencer campaign", tone: "ink" },
   { kind: "client", title: "New car shoot", tag: "Video production", tone: "accent" },
   { kind: "client", title: "Naina Kadai", tag: "Personal branding", tone: "ink" },
-  { kind: "client", title: "2021 Mobiles", tag: "Social media", tone: "paper" },
-  { kind: "client", title: "Ne Forever", tag: "Influencer campaign", tone: "accent" },
+  { kind: "client", title: "2021 Mobiles", tag: "Social media", tone: "accent" },
+  { kind: "client", title: "Ne Forever", tag: "Influencer campaign", tone: "ink" },
 ];
 
 // Everybody else's posts. The ones people scroll straight past.

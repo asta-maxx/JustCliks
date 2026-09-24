@@ -8,7 +8,6 @@ type Brief = {
   message: string;
   goal: string;
   services: string[];
-  ticket: string;
 };
 
 const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
@@ -30,7 +29,6 @@ export async function POST(req: Request) {
     email: str(raw.email, 200),
     message: str(raw.message, 2000),
     goal: str(raw.goal, 120),
-    ticket: str(raw.ticket, 12),
     services: Array.isArray(raw.services) ? raw.services.map((s) => str(s, 60)).filter(Boolean).slice(0, 6) : [],
   };
 

@@ -7,13 +7,15 @@ export function LegalPage({ title, children }: { title: string; children: React.
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[1400px] px-4 py-16 md:px-8 md:py-24">
+      <main className="wrap py-16 md:py-24">
         <div className="grid gap-10 lg:grid-cols-12">
           <header className="lg:col-span-4">
-            <h1 className="type-mass text-[14vw] md:text-[5rem] lg:sticky lg:top-24">{title}</h1>
-            <p className="type-label mt-6 text-muted">Last updated {site.legalUpdated}</p>
+            <div className="lg:sticky lg:top-28">
+              <h1 className="t-h2">{title}</h1>
+              <p className="t-label mt-5 text-muted">Last updated {site.legalUpdated}</p>
+            </div>
           </header>
-          <article className="legal max-w-[68ch] text-lg leading-relaxed lg:col-span-7 lg:col-start-6 [&_a]:font-semibold [&_a]:underline [&_h2]:mt-12 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-2 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-[square] [&_ul]:pl-6 [&_ul_li::marker]:text-accent">
+          <article className="max-w-[68ch] text-[1.0625rem] leading-relaxed text-fg/90 lg:col-span-7 lg:col-start-6 [&_a]:font-bold [&_a]:text-fg [&_a]:underline [&_h2]:mt-12 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-extrabold [&_h2]:tracking-[-0.02em] [&_li]:mt-2 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-[square] [&_ul]:pl-6 [&_ul_li::marker]:text-orange">
             {children}
           </article>
         </div>
