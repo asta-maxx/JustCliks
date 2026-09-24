@@ -64,6 +64,14 @@ export function Brief() {
   const set = (k: keyof typeof blank) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     ensureTicket();
     setValues((v) => ({ ...v, [k]: e.target.value }));
+    // Clear the message for the field being fixed.
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (k === "name") delete next.name;
+      if (k === "phone" || k === "email") delete next.contact;
+      if (k === "email") delete next.email;
+      return next;
+    });
   };
 
   async function onSubmit(e: React.FormEvent) {

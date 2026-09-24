@@ -1,31 +1,23 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { gsap, MOTION_OK, SplitText, useGSAP } from "@/lib/gsap";
+import { noisePosts } from "@/lib/content";
+import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
+import { FeedCard } from "./FeedCard";
+import { ScrollStopper } from "./ScrollStopper";
 
-const FilmReel = dynamic(() => import("./FilmReel"), { ssr: false });
+const introFeed = noisePosts.map((title, i) => ({
+  kind: "noise" as const,
+  title,
+  tag: i % 3 === 1 ? "Sponsored" : "Suggested",
+  tone: "paper" as const,
+}));
 
-const services = [
-  "Content creation",
-  "Social media management",
-  "Branding",
-  "Personal branding",
-  "Influencer marketing",
-  "Video production",
-];
-
-const slammed = () => {
-  document.documentElement.dataset.slammed = "1";
-  window.dispatchEvent(new Event("jc:slam"));
-};
-
-// First visit: film-leader countdown, "JustCliks presents", then the film loop
-// spins in and the title slams down with a flash and a camera shake.
+// First visit: a feed of generic posts blurs past and brakes hard on one
+// orange post. Flash, and the page opens. Later visits skip straight in.
 export function Hero() {
   const root = useRef<HTMLElement>(null);
-  const title = useRef<HTMLHeadingElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useGSAP(
@@ -40,18 +32,34 @@ export function Hero() {
 
         if (!seen) {
           html.dataset.introPlaying = "1";
-          const sweep = root.current!.querySelector<HTMLElement>(".leader-sweep");
-          gsap.utils.toArray<HTMLElement>(".leader-n").forEach((n) => {
-            tl.set(n, { autoAlpha: 1 })
-              .fromTo(sweep, { "--sweep": "0deg" }, { "--sweep": "360deg", duration: 0.46, ease: "none" })
-              .set(n, { autoAlpha: 0 });
-          });
-          const presents = SplitText.create(".presents", { type: "chars" });
-          tl.set(".leader", { autoAlpha: 0 })
-            .set(".presents", { autoAlpha: 1 })
-            .from(presents.chars, { autoAlpha: 0, yPercent: 80, duration: 0.4, stagger: 0.022, ease: "expo.out" })
-            .to(".presents", { autoAlpha: 0, duration: 0.15 }, "+=0.4")
-            .to(".intro", { autoAlpha: 0, duration: 0.25 })
+          const win = root.current!.querySelector<HTMLElement>(".intro-win")!;
+          const track = root.current!.querySelector<HTMLElement>(".intro-track")!;
+          const blur = root.current!.querySelector<SVGFEGaussianBlurElement>("#iblur feGaussianBlur")!;
+          const cards = track.children;
+          const last = cards[cards.length - 1] as HTMLElement;
+          const endY = win.clientHeight / 2 - (last.offsetTop + last.offsetHeight / 2);
+          const startY = win.clientHeight / 2 - (cards[0] as HTMLElement).offsetHeight / 2;
+          let prevY = startY;
+          let prevT = performance.now();
+
+          gsap.set(track, { y: startY });
+          tl.to(track, {
+            y: endY,
+            duration: 2,
+            ease: "expo.inOut",
+            onUpdate() {
+              const y = gsap.getProperty(track, "y") as number;
+              const now = performance.now();
+              const speed = Math.abs(y - prevY) / Math.max((now - prevT) / 1000, 0.001);
+              prevY = y;
+              prevT = now;
+              blur.setAttribute("stdDeviation", `0 ${Math.min(speed / 220, 18).toFixed(2)}`);
+            },
+            onComplete: () => blur.setAttribute("stdDeviation", "0 0"),
+          })
+            .fromTo(".intro-flash", { opacity: 0.95 }, { opacity: 0, duration: 0.5, ease: "power2.out" })
+            .fromTo(".intro-stop", { scale: 1.08 }, { scale: 1, duration: 0.6, ease: "expo.out" }, "<")
+            .to(".intro", { yPercent: -100, duration: 0.85, ease: "expo.inOut" }, "+=0.35")
             .set(".intro", { display: "none" })
             .call(() => {
               html.dataset.introSeen = "1";
@@ -62,27 +70,8 @@ export function Hero() {
             });
         }
 
-        // The mass entry.
-        tl.call(slammed)
-          .from(".slam", { scale: 2.4, autoAlpha: 0, duration: 0.45, ease: "power4.in", stagger: 0.14 })
-          .fromTo(".hero-flash", { opacity: 0.8 }, { opacity: 0, duration: 0.6, ease: "power2.out" })
-          .to(
-            ".hero-shake",
-            { keyframes: { x: [-14, 11, -7, 5, -2, 0], y: [6, -6, 4, -2, 1, 0] }, duration: 0.45, ease: "none" },
-            "<",
-          )
-          .from(".hero-fade", { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.09, ease: "expo.out" }, "-=0.25");
-
-        // Leaving the hero: the title drifts up and dims while the reel pushes in.
-        gsap.to(".hero-shake", {
-          yPercent: -18,
-          opacity: 0.15,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true },
-        });
+        tl.from(".hero-in", { y: 28, autoAlpha: 0, duration: 0.9, stagger: 0.08, ease: "expo.out" }, seen ? 0 : "-=0.45");
       });
-
-      mm.add("(prefers-reduced-motion: reduce)", slammed);
       return () => mm.revert();
     },
     { scope: root },
@@ -97,72 +86,59 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={root} aria-labelledby="hero-title" className="relative overflow-hidden">
-      {/* Intro: film leader */}
-      <div aria-hidden className="intro fixed inset-0 z-50 grid place-items-center bg-[#070605] text-ink">
-        <div className="leader relative grid size-[min(70vw,70vh)] place-items-center">
-          <div className="leader-sweep absolute inset-0 rounded-full" />
-          <div className="absolute inset-[5%] rounded-full border-2 border-ink/45" />
-          <div className="absolute inset-[15%] rounded-full border border-ink/25" />
-          <div className="absolute inset-y-0 left-1/2 w-px bg-ink/25" />
-          <div className="absolute inset-x-0 top-1/2 h-px bg-ink/25" />
-          {[3, 2, 1].map((n) => (
-            <span key={n} className="leader-n type-mass invisible absolute text-[min(36vw,36vh)] leading-none">
-              {n}
-            </span>
-          ))}
+    <section ref={root} aria-labelledby="hero-title" className="relative">
+      {/* Intro */}
+      <div aria-hidden className="intro fixed inset-0 z-50 overflow-hidden bg-bg">
+        <svg className="absolute size-0">
+          <filter id="iblur" x="0" y="-20%" width="100%" height="140%">
+            <feGaussianBlur stdDeviation="0 0" />
+          </filter>
+        </svg>
+        <div className="intro-win relative mx-auto h-full w-[min(300px,70vw)]">
+          <div className="intro-track absolute inset-x-0 top-0 flex flex-col gap-3 [filter:url(#iblur)]">
+            {introFeed.concat(introFeed).map((item, i) => (
+              <div key={i} className="aspect-[4/5] w-full shrink-0">
+                <FeedCard item={item} />
+              </div>
+            ))}
+            <div className="intro-stop @container flex aspect-[4/5] w-full shrink-0 flex-col justify-between bg-orange p-[8cqw] text-on-orange">
+              <p className="t-label text-[3.4cqw]">JustCliks</p>
+              <p className="font-display text-[17cqw] font-extrabold leading-[0.98] tracking-[-0.035em]">
+                Worth the stop.
+              </p>
+            </div>
+          </div>
+          <div className="intro-flash pointer-events-none absolute inset-x-0 top-1/2 aspect-[4/5] -translate-y-1/2 bg-fg opacity-0" />
         </div>
-        <p className="presents type-credit invisible absolute text-center text-[clamp(1.4rem,3vw,2.6rem)] tracking-[0.3em] text-ink">
-          JustCliks presents
-        </p>
         <button
           type="button"
           onClick={() => tlRef.current?.progress(1)}
-          className="type-label absolute bottom-6 right-6 border border-ink/40 px-3 py-2 text-ink hover:bg-ink hover:text-paper"
+          className="t-label absolute bottom-6 right-6 border border-line px-3 py-2 text-fg hover:bg-fg hover:text-bg"
         >
           Skip intro
         </button>
       </div>
 
-      <FilmReel trigger={root} anchor={title} />
-      <div aria-hidden className="hero-flash pointer-events-none absolute inset-0 z-10 bg-[var(--flash)] opacity-0" />
-
-      <div className="hero-shake relative z-[1] mx-auto flex min-h-[calc(100svh-4rem)] max-w-[1400px] flex-col px-4 pb-8 pt-10 md:px-8 md:pb-10">
-        <div className="flex flex-1 flex-col items-center justify-center py-16 text-center md:py-10">
-          <h1
-            ref={title}
-            id="hero-title"
-            className="type-mass text-[19.5vw] md:text-[13vw] lg:text-[11.2vw] 2xl:text-[10.5rem]"
-          >
-            <span className="slam block">Stop the</span>
-            <span className="slam block text-accent">scroll.</span>
+      <div className="wrap grid min-h-[calc(100svh-4.5rem)] grid-cols-1 items-center gap-14 py-16 lg:grid-cols-12 lg:gap-10 lg:py-12">
+        <div className="lg:col-span-6">
+          <h1 id="hero-title" className="hero-in t-display max-w-[13ch]">
+            We make the posts people <span className="text-orange">stop</span> scrolling for.
           </h1>
-        </div>
-
-        {/* Bottom of the poster: the billing block, built from the real service list, and the CTAs */}
-        <div className="grid items-end gap-8 border-t border-line pt-6 lg:grid-cols-12 lg:gap-6">
-          <div className="hero-fade type-credit text-[1.05rem] leading-[1.12] text-muted md:text-[1.3rem] lg:col-span-8">
-            <p>
-              In association with <span className="text-[1.45em] text-ink">your brand</span>&nbsp; a{" "}
-              <span className="text-[1.45em] text-ink">JustCliks</span> production
-            </p>
-            <p className="mt-1 flex flex-wrap gap-x-4">
-              {services.map((s) => (
-                <span key={s}>{s}</span>
-              ))}
-            </p>
-            <p className="mt-1">
-              Starring <span className="text-ink">restaurants, caterers, creators and founders</span>
-            </p>
-          </div>
-          <div className="hero-fade flex flex-wrap gap-3 lg:col-span-4 lg:justify-end">
+          <p className="hero-in t-lead mt-6 max-w-[44ch]">
+            Content, social media, branding, influencer campaigns and video for restaurants, caterers, creators and
+            founders.
+          </p>
+          <div className="hero-in mt-9 flex flex-wrap gap-3">
             <Link href="#contact" className="btn btn-primary">
-              Book a slot
+              Start a project
             </Link>
-            <Link href="#work" className="btn btn-ghost bg-paper">
-              Watch the reel
+            <Link href="#work" className="btn btn-ghost">
+              See the work
             </Link>
           </div>
+        </div>
+        <div className="hero-in lg:col-span-6">
+          <ScrollStopper />
         </div>
       </div>
     </section>

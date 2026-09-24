@@ -30,11 +30,11 @@ export function Manifesto() {
   );
 
   return (
-    <section ref={root} aria-label="What we do" className="mx-auto max-w-[1400px] px-4 py-32 md:px-8 md:py-48">
-      <p className="manifesto type-head max-w-[24ch] text-[clamp(2.2rem,5.2vw,5.2rem)]">
-        Your customers scroll past almost everything. We make the post they <span className="text-accent">stop</span>{" "}
+    <section ref={root} aria-label="What we do" className="wrap grid py-28 md:py-40 lg:grid-cols-12">
+      <p className="manifesto t-h2 lg:col-span-10">
+        Your customers scroll past almost everything. We make the post they <span className="text-orange">stop</span>{" "}
         for. Then the next one, and the one after that, until your name is the one they{" "}
-        <span className="text-accent">remember.</span>
+        <span className="text-orange">remember.</span>
       </p>
     </section>
   );

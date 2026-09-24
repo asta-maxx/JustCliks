@@ -8,8 +8,7 @@ import { Poster } from "./Poster";
 
 const PAN = `(min-width: 1024px) and ${MOTION_OK}`;
 
-// Desktop: vertical scroll pans the reel sideways, like scrubbing a timeline.
-// Smaller screens: native swipe with snap points.
+// Desktop: vertical scroll pans the reel sideways. Smaller screens: swipe.
 export function Work() {
   const wrap = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -18,18 +17,23 @@ export function Work() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(PAN, () => {
-        const distance = () => track.current!.scrollWidth - window.innerWidth;
+        const distance = () => track.current!.scrollWidth - track.current!.clientWidth;
         gsap.to(track.current, {
           x: () => -distance(),
           ease: "none",
           scrollTrigger: {
             trigger: wrap.current,
-            start: "top top",
+            start: "top top+=72",
             end: () => `+=${distance()}`,
             pin: true,
             scrub: 1,
             invalidateOnRefresh: true,
           },
+        });
+        gsap.to(".work-progress", {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: { trigger: wrap.current, start: "top top+=72", end: () => `+=${distance()}`, scrub: true },
         });
       });
       return () => mm.revert();
@@ -38,41 +42,43 @@ export function Work() {
   );
 
   return (
-    <section
-      ref={wrap}
-      id="work"
-      aria-labelledby="work-title"
-      className="scroll-mt-16 overflow-hidden lg:h-[100dvh]"
-    >
-      <div
-        ref={track}
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 py-20 md:px-8 lg:h-full lg:snap-none lg:items-center lg:gap-8 lg:overflow-visible lg:py-0 lg:pt-16 motion-reduce:lg:overflow-x-auto"
-      >
-        <div className="flex w-[82vw] shrink-0 snap-start flex-col justify-end md:w-[46vw] lg:w-[30vw] lg:self-stretch lg:pb-[14dvh]">
-          <h2 id="work-title" className="type-mass text-[16vw] md:text-[6rem] lg:text-[6vw]">
-            The reel.
+    <section ref={wrap} id="work" aria-labelledby="work-title" className="scroll-mt-[4.5rem] overflow-hidden border-t border-line">
+      <div className="lg:flex lg:h-[calc(100svh-4.5rem)] lg:flex-col lg:justify-center">
+        <div className="wrap grid gap-6 pt-28 lg:grid-cols-12 lg:pt-0">
+          <h2 id="work-title" className="t-h2 lg:col-span-6">
+            Recent work.
           </h2>
-          <p className="mt-5 max-w-[30ch] text-lg leading-relaxed text-muted">
-            Music videos, film promotions, feeds and faces. Scroll through a few of our projects.
+          <p className="t-lead self-end lg:col-span-4 lg:col-start-9">
+            Music videos, film promotions, feeds and founders. Real clients, real briefs.
           </p>
         </div>
 
-        {work.map((w) => (
-          <article key={w.title} className="w-[78vw] shrink-0 snap-start md:w-[42vw] lg:w-auto">
-            <div className="aspect-[4/5] w-full lg:h-[64dvh] lg:w-auto">
-              {w.media ? (
-                <MediaSlot media={w.media} alt={`${w.title}, ${w.detail}`} />
-              ) : (
-                <Poster title={w.title} tone={w.tone} tamil={w.tamil} />
-              )}
-            </div>
-            <div className="mt-3 flex items-baseline justify-between gap-4 border-t border-line pt-3 lg:max-w-[calc(64dvh*0.8)]">
-              <h3 className="type-label shrink-0">{w.service}</h3>
-              <p className="truncate text-right text-sm text-muted">{w.detail}</p>
-            </div>
-          </article>
-        ))}
-        <div aria-hidden className="w-px shrink-0 lg:w-[4vw]" />
+        <div
+          ref={track}
+          className="mt-10 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-24 md:scroll-px-10 md:px-10 lg:mt-12 lg:snap-none lg:gap-5 lg:overflow-visible lg:pb-0 xl:px-[max(2.5rem,calc((100vw-1320px)/2+2.5rem))]"
+        >
+          {work.map((w) => (
+            <article key={w.title} className="w-[72vw] shrink-0 snap-start sm:w-[42vw] lg:w-[min(21rem,24vw)]">
+              <div className="aspect-[4/5] w-full">
+                {w.media ? (
+                  <MediaSlot media={w.media} alt={`${w.title}, ${w.detail}`} />
+                ) : (
+                  <Poster title={w.title} tone={w.tone} tamil={w.tamil} />
+                )}
+              </div>
+              <h3 className="mt-4 font-display text-lg font-extrabold tracking-[-0.02em]">{w.title}</h3>
+              <p className="mt-1 text-sm text-muted">
+                <span className="text-orange">{w.service}</span> <span className="text-dim">/</span> {w.detail}
+              </p>
+            </article>
+          ))}
+        </div>
+
+        <div className="wrap mt-10 hidden lg:block">
+          <div className="h-px bg-line">
+            <div className="work-progress h-px origin-left scale-x-0 bg-orange" />
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -178,19 +178,56 @@ export const work: WorkItem[] = [
   },
 ];
 
-// What rolls through the hero viewfinder.
-export const feed: { title: string; tag: string; tone: Tone; tamil?: string }[] = [
-  { title: "Aasife and Brothers Biriyani", tag: "Social media", tone: "accent", tamil: "பிரியாணி" },
-  { title: "LIK", tag: "Influencer campaign", tone: "ink" },
-  { title: "Tamil Christian song", tag: "Video production", tone: "paper", tamil: "பாடல்" },
-  { title: "Joel Prince", tag: "Personal branding", tone: "accent" },
-  { title: "Meenakshi Catering", tag: "Social media", tone: "ink" },
-  { title: "Senthil Balaji", tag: "Influencer campaign", tone: "paper" },
-  { title: "New car shoot", tag: "Video production", tone: "accent" },
-  { title: "Naina Kadai", tag: "Personal branding", tone: "ink" },
-  { title: "2021 Mobiles", tag: "Social media", tone: "paper" },
-  { title: "Ne Forever", tag: "Influencer campaign", tone: "accent" },
+export type FeedItem = {
+  kind: "client" | "noise";
+  title: string;
+  tag: string;
+  tone: Tone;
+  tamil?: string;
+};
+
+// Real client posts, the ones the feed stops on.
+const clientPosts: FeedItem[] = [
+  { kind: "client", title: "Aasife and Brothers Biriyani", tag: "Social media", tone: "accent", tamil: "பிரியாணி" },
+  { kind: "client", title: "LIK", tag: "Influencer campaign", tone: "ink" },
+  { kind: "client", title: "Tamil Christian song", tag: "Video production", tone: "paper", tamil: "பாடல்" },
+  { kind: "client", title: "Joel Prince", tag: "Personal branding", tone: "accent" },
+  { kind: "client", title: "Meenakshi Catering", tag: "Social media", tone: "ink" },
+  { kind: "client", title: "Senthil Balaji", tag: "Influencer campaign", tone: "paper" },
+  { kind: "client", title: "New car shoot", tag: "Video production", tone: "accent" },
+  { kind: "client", title: "Naina Kadai", tag: "Personal branding", tone: "ink" },
+  { kind: "client", title: "2021 Mobiles", tag: "Social media", tone: "paper" },
+  { kind: "client", title: "Ne Forever", tag: "Influencer campaign", tone: "accent" },
 ];
+
+// Everybody else's posts. The ones people scroll straight past.
+const noise = [
+  "Good morning!",
+  "Sale ends soon",
+  "Link in bio",
+  "Throwback Thursday",
+  "Tag a friend",
+  "Happy Monday",
+  "Coming soon",
+  "Weekend vibes",
+  "Don't miss out",
+  "New post",
+  "Swipe for more",
+  "Guess what?",
+];
+
+// Three generic posts between every client post.
+export const feed: FeedItem[] = clientPosts.flatMap((c, i) => [
+  c,
+  ...[0, 1, 2].map((j) => ({
+    kind: "noise" as const,
+    title: noise[(i * 3 + j) % noise.length],
+    tag: j === 1 ? "Sponsored" : "Suggested",
+    tone: "paper" as const,
+  })),
+]);
+
+export const noisePosts = noise;
 
 export const stats = [
   { n: 8, label: "brands trust us to run their social media" },

@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { site, whatsappLink } from "@/lib/site";
-import { CreditsRoll } from "./CreditsRoll";
+import { Logo } from "./Logo";
 
-// End credits.
 export function Footer() {
   const socials = [
     { label: "Instagram", href: site.instagram },
@@ -10,47 +9,60 @@ export function Footer() {
     { label: "WhatsApp", href: whatsappLink },
   ].filter((s) => s.href);
 
-  return (
-    <footer className="overflow-hidden border-t border-line bg-paper">
-      <div className="mx-auto max-w-[1400px] px-4 pt-32 md:px-8 md:pt-48">
-        <CreditsRoll />
+  const contact = [
+    site.email && { label: site.email, href: `mailto:${site.email}` },
+    site.phone && { label: site.phone, href: `tel:${site.phone.replace(/\s/g, "")}` },
+  ].filter(Boolean) as { label: string; href: string }[];
 
-        <div className="mt-32 grid grid-cols-2 gap-10 border-t border-line pt-10 md:grid-cols-12">
-          <nav aria-label="Footer" className="md:col-span-3">
-            <ul className="flex flex-col gap-2 font-semibold">
-              <li><Link className="link" href="/#services">Services</Link></li>
-              <li><Link className="link" href="/#work">Work</Link></li>
-              <li><Link className="link" href="/#clients">Cast</Link></li>
-              <li><Link className="link" href="/#contact">Book a slot</Link></li>
-            </ul>
-          </nav>
-          <div className="md:col-span-3">
-            <ul className="flex flex-col gap-2 font-semibold">
-              <li><Link className="link" href="/privacy">Privacy policy</Link></li>
-              <li><Link className="link" href="/terms">Terms of service</Link></li>
+  return (
+    <footer className="border-t border-line">
+      <div className="wrap grid gap-12 py-16 md:grid-cols-12 md:gap-10 md:py-20">
+        <div className="md:col-span-5">
+          <Link href="/" aria-label="JustCliks home" className="text-[1.5rem]">
+            <Logo />
+          </Link>
+          <p className="mt-4 max-w-[34ch] text-muted">
+            Content, social media, branding, influencer marketing and video production.
+          </p>
+          {site.address && <p className="mt-4 max-w-[34ch] text-sm text-muted">{site.address}</p>}
+        </div>
+
+        <nav aria-label="Footer" className="md:col-span-2 md:col-start-7">
+          <p className="t-label text-dim">Site</p>
+          <ul className="mt-4 grid gap-2 font-bold">
+            <li><Link className="link" href="/#services">Services</Link></li>
+            <li><Link className="link" href="/#work">Work</Link></li>
+            <li><Link className="link" href="/#clients">Clients</Link></li>
+            <li><Link className="link" href="/#contact">Start a project</Link></li>
+          </ul>
+        </nav>
+
+        <div className="md:col-span-2">
+          <p className="t-label text-dim">Legal</p>
+          <ul className="mt-4 grid gap-2 font-bold">
+            <li><Link className="link" href="/privacy">Privacy policy</Link></li>
+            <li><Link className="link" href="/terms">Terms of service</Link></li>
+          </ul>
+        </div>
+
+        {(contact.length > 0 || socials.length > 0) && (
+          <div className="md:col-span-2">
+            <p className="t-label text-dim">Contact</p>
+            <ul className="mt-4 grid gap-2 font-bold">
+              {contact.map((c) => (
+                <li key={c.href}><a className="link" href={c.href}>{c.label}</a></li>
+              ))}
+              {socials.map((s) => (
+                <li key={s.label}><a className="link" href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
+              ))}
             </ul>
           </div>
-          {(socials.length > 0 || site.email || site.phone) && (
-            <div className="col-span-2 md:col-span-4 md:col-start-9">
-              <ul className="flex flex-col gap-2 font-semibold">
-                {site.email && <li><a className="link" href={`mailto:${site.email}`}>{site.email}</a></li>}
-                {site.phone && <li><a className="link" href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a></li>}
-                {socials.map((s) => (
-                  <li key={s.label}><a className="link" href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
-                ))}
-              </ul>
-              {site.address && <p className="mt-4 max-w-[32ch] text-sm text-muted">{site.address}</p>}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
-      <p aria-hidden className="type-mass mt-20 select-none whitespace-nowrap text-center text-[17.6vw] leading-[0.78]">
-        Just<span className="text-accent">Cliks</span>
-      </p>
-      <div className="mx-auto flex max-w-[1400px] flex-wrap justify-between gap-2 px-4 py-6 text-sm text-muted md:px-8">
+      <div className="wrap flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 text-sm text-muted">
         <p>© {new Date().getFullYear()} JustCliks. All rights reserved.</p>
-        <p>Content, social media, branding and video.</p>
+        <p>Made to stop the scroll.</p>
       </div>
     </footer>
   );
