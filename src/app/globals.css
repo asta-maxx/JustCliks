@@ -67,6 +67,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Nothing may widen the page sideways. On phones, any overflow makes the
+   browser zoom the whole layout out, which can flip on desktop styles and
+   cut scrolling short. `clip` (not `hidden`) keeps the sticky header working. */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 body {
   background: var(--bg);
   color: var(--fg);

@@ -80,7 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
-      <body className="min-h-dvh">
+      <body className="min-h-dvh" suppressHydrationWarning>
         {children}
         <Toaster />
       </body>

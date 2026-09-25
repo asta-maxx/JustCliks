@@ -30,53 +30,51 @@ const Stage = ({ label, aside, children }: { label: string; aside?: string; chil
   </div>
 );
 
-/* Social media management: a posting calendar filling up for the week */
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const social = ["Aasife", "Meat Mr. Dosa", "2021 Mobiles", "NS", "Krishna", "Sowndarya", "Dharma", "Meenakshi"];
-const slots: Record<number, { type: string; tone: string }> = {
-  0: { type: "Reel", tone: "bg-orange text-on-orange" },
-  2: { type: "Post", tone: "bg-fg text-bg" },
-  3: { type: "Story", tone: "bg-bg text-fg" },
-  5: { type: "Reel", tone: "bg-orange text-on-orange" },
-  8: { type: "Post", tone: "bg-fg text-bg" },
-  9: { type: "Reel", tone: "bg-orange text-on-orange" },
-  11: { type: "Story", tone: "bg-bg text-fg" },
-  13: { type: "Post", tone: "bg-fg text-bg" },
-  14: { type: "Reel", tone: "bg-orange text-on-orange" },
-  16: { type: "Post", tone: "bg-fg text-bg" },
-  18: { type: "Story", tone: "bg-bg text-fg" },
-  20: { type: "Reel", tone: "bg-orange text-on-orange" },
-};
+/* Social media management: the page stays alive, and every question gets a reply */
+const inbox = [
+  { q: "Open this Sunday?", a: "Yes! 12 to 11. See you there." },
+  { q: "Do you take bulk orders for functions?", a: "We do. Sending you the menu in DMs now." },
+  { q: "Where are you exactly?", a: "Location is pinned on our profile. Tap it for directions." },
+];
 
 function SocialVisual({ play }: VisualProps) {
   const ref = useRef<HTMLDivElement>(null);
   usePlay(ref, play, () => {
-    gsap.from(".cal-post", { scale: 0.4, autoAlpha: 0, duration: 0.5, stagger: 0.09, ease: "back.out(2)" });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.2 });
+    tl.set(".msg", { autoAlpha: 0, y: 12 }).set(".typing", { autoAlpha: 0 });
+    inbox.forEach((_, i) => {
+      tl.to(`.q-${i}`, { autoAlpha: 1, y: 0, duration: 0.4, ease: "expo.out" }, "+=0.45")
+        .to(`.t-${i}`, { autoAlpha: 1, duration: 0.2 }, "+=0.25")
+        .to(`.t-${i}`, { autoAlpha: 0, duration: 0.15 }, "+=0.8")
+        .to(`.a-${i}`, { autoAlpha: 1, y: 0, duration: 0.4, ease: "expo.out" });
+    });
+    tl.to(".msg", { autoAlpha: 0, duration: 0.4 }, "+=2.2");
   });
-  let n = 0;
   return (
     <div ref={ref} className="h-full">
-      <Stage label="Posting calendar" aside="Festival week">
-        <div className="grid h-full grid-cols-7 grid-rows-[auto_1fr_1fr_1fr] gap-1.5">
-          {days.map((d) => (
-            <p key={d} className="t-label pb-1 text-center text-[0.625rem] text-muted">
-              {d}
-            </p>
-          ))}
-          {Array.from({ length: 21 }, (_, i) => {
-            const s = slots[i];
-            return (
-              <div key={i} className="relative bg-surface-2">
-                {s && (
-                  <div className={`cal-post absolute inset-0 flex flex-col justify-between p-1.5 md:p-2 ${s.tone}`}>
-                    <span className="t-label text-[0.5625rem] opacity-80">{s.type}</span>
-                    <span className="truncate text-[0.625rem] font-bold leading-tight md:text-xs">{social[n++ % social.length]}</span>
-                  </div>
-                )}
+      <Stage label="Your page, answered" aside="Example page">
+        <ul className="flex h-full flex-col justify-center gap-2 overflow-hidden sm:gap-2.5">
+          {inbox.map((m, i) => (
+            <li key={m.q} className="grid gap-1.5 sm:gap-2">
+              <p className={`msg q-${i} flex max-w-[82%] items-start gap-2 self-start`}>
+                <span aria-hidden className="grid size-7 shrink-0 place-items-center bg-surface-2 text-[0.625rem] font-bold text-muted">
+                  {["RK", "PS", "AV"][i]}
+                </span>
+                <span className="bg-surface-2 px-3 py-2 text-[0.8125rem] leading-snug sm:text-sm">{m.q}</span>
+              </p>
+              <div className="relative flex justify-end">
+                <span aria-hidden className={`typing t-${i} absolute right-0 top-0 flex gap-1 bg-orange px-3 py-3 opacity-0`}>
+                  {[0, 1, 2].map((d) => (
+                    <span key={d} className="size-1.5 animate-pulse bg-on-orange" style={{ animationDelay: `${d * 120}ms` }} />
+                  ))}
+                </span>
+                <p className={`msg a-${i} max-w-[82%] bg-orange px-3 py-2 text-[0.8125rem] font-bold leading-snug text-on-orange sm:text-sm`}>
+                  {m.a}
+                </p>
               </div>
-            );
-          })}
-        </div>
+            </li>
+          ))}
+        </ul>
       </Stage>
     </div>
   );
@@ -94,28 +92,28 @@ function ContentVisual({ play }: VisualProps) {
   return (
     <div ref={ref} className="h-full">
       <Stage label="One shoot, three formats">
-        <div className="flex h-full items-end justify-center gap-4 md:gap-6">
-          <figure className="fmt flex h-full flex-col items-center gap-2">
+        <div className="flex h-full items-end justify-center gap-4 [container-type:size] md:gap-6">
+          <figure className="fmt flex flex-col items-center gap-2" style={{ height: "min(100cqh, 52cqw)" }}>
             <div className="relative flex aspect-[9/16] min-h-0 flex-1 flex-col justify-between bg-orange p-3 text-on-orange">
               <span className="t-label text-[0.5625rem]">0:15</span>
-              <Play size={28} weight="fill" className="self-center" aria-hidden />
-              <span className="font-display text-sm font-extrabold leading-tight">Plating the biriyani</span>
+              <Play size={24} weight="fill" className="self-center" aria-hidden />
+              <span className="font-display text-xs font-extrabold leading-tight sm:text-sm">Plating the biriyani</span>
             </div>
             <figcaption className="t-label text-[0.625rem] text-muted">Reel</figcaption>
           </figure>
-          <figure className="fmt flex h-[62%] flex-col items-center gap-2">
+          <figure className="fmt flex flex-col items-center gap-2" style={{ height: "calc(min(100cqh, 52cqw) * 0.62)" }}>
             <div className="relative aspect-square min-h-0 flex-1 overflow-hidden bg-fg text-bg">
               <div className="slides flex h-full w-[300%]">
                 {["The menu", "The kitchen", "The crowd"].map((t) => (
-                  <div key={t} className="flex h-full w-1/3 items-end p-3">
-                    <span className="font-display text-sm font-extrabold leading-tight">{t}</span>
+                  <div key={t} className="flex h-full w-1/3 items-end p-2 sm:p-3">
+                    <span className="font-display text-xs font-extrabold leading-tight sm:text-sm">{t}</span>
                   </div>
                 ))}
               </div>
             </div>
             <figcaption className="t-label text-[0.625rem] text-muted">Carousel</figcaption>
           </figure>
-          <figure className="fmt flex h-[84%] flex-col items-center gap-2">
+          <figure className="fmt flex flex-col items-center gap-2" style={{ height: "calc(min(100cqh, 52cqw) * 0.84)" }}>
             <div className="relative flex aspect-[9/16] min-h-0 flex-1 flex-col justify-between border border-line bg-surface-2 p-3">
               <div className="flex gap-1">
                 <span className="h-0.5 flex-1 bg-fg" />
@@ -124,7 +122,7 @@ function ContentVisual({ play }: VisualProps) {
                 </span>
                 <span className="h-0.5 flex-1 bg-fg/25" />
               </div>
-              <span className="font-display text-sm font-extrabold leading-tight">Open till midnight</span>
+              <span className="font-display text-xs font-extrabold leading-tight sm:text-sm">Open till midnight</span>
             </div>
             <figcaption className="t-label text-[0.625rem] text-muted">Story</figcaption>
           </figure>
@@ -167,10 +165,10 @@ function InfluencerVisual({ play }: VisualProps) {
   return (
     <div ref={ref} className="h-full">
       <Stage label="Brief to creators" aside="Tracked per post">
-        <svg viewBox="0 0 600 300" className="h-full w-full" role="img" aria-label="One brand brief sent to five kinds of creators">
+        <svg viewBox="0 0 600 300" className="hidden h-full w-full sm:block" role="img" aria-label="One brand brief sent to five kinds of creators">
           {creators.map((_, i) => {
             const cx = 60 + i * 120;
-            return <path key={i} className="wire" d={`M300 64 V150 H${cx} V226`} fill="none" stroke="rgb(28 28 27 / 0.4)" strokeWidth="1.5" />;
+            return <path key={i} className="wire" d={`M300 64 V150 H${cx} V226`} fill="none" stroke="var(--line-strong)" strokeWidth="1.5" />;
           })}
           {creators.map((_, i) => (
             <rect key={i} className="brief" x="296" y="60" width="8" height="8" fill="var(--orange)" />
@@ -190,6 +188,36 @@ function InfluencerVisual({ play }: VisualProps) {
                   {c}
                 </text>
                 <text x={cx} y="273" textAnchor="middle" className="fill-bg font-mono text-[10px] uppercase tracking-[0.1em]">
+                  creator
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+        {/* Phones: brand on the left, creators stacked on the right, so the text stays readable */}
+        <svg viewBox="0 0 320 330" className="h-full w-full sm:hidden" role="img" aria-label="One brand brief sent to five kinds of creators">
+          {creators.map((_, i) => {
+            const cy = 26 + i * 66;
+            return <path key={i} className="wire" d={`M112 165 H150 V${cy} H196`} fill="none" stroke="var(--line-strong)" strokeWidth="1.5" />;
+          })}
+          {creators.map((_, i) => (
+            <rect key={i} className="brief" x="108" y="161" width="8" height="8" fill="var(--orange)" />
+          ))}
+          <g>
+            <rect x="4" y="137" width="108" height="56" fill="var(--orange)" />
+            <text x="58" y="171" textAnchor="middle" className="fill-on-orange font-display text-[17px] font-extrabold">
+              Your brand
+            </text>
+          </g>
+          {creators.map((c, i) => {
+            const cy = 26 + i * 66;
+            return (
+              <g key={c} className="creator">
+                <rect x="196" y={cy - 24} width="120" height="48" fill="var(--fg)" />
+                <text x="256" y={cy} textAnchor="middle" className="fill-bg font-display text-[17px] font-extrabold">
+                  {c}
+                </text>
+                <text x="256" y={cy + 16} textAnchor="middle" className="fill-bg font-mono text-[10px] uppercase tracking-[0.1em]">
                   creator
                 </text>
               </g>
@@ -278,9 +306,9 @@ function PersonalVisual({ play }: VisualProps) {
     <div ref={ref} className="h-full">
       <Stage label="Founder profile">
         {founders.map((f, i) => (
-          <div key={f.name} className={`face-${i} absolute inset-0 grid grid-cols-[auto_1fr] items-center gap-5 md:gap-8 ${i ? "invisible" : ""}`}>
-            <div className="grid aspect-square h-[70%] max-h-56 place-items-center bg-orange text-on-orange">
-              <span className="font-display text-5xl font-extrabold tracking-[-0.04em] md:text-7xl">{f.initials}</span>
+          <div key={f.name} className={`face-${i} absolute inset-0 grid grid-cols-[34%_1fr] items-center gap-4 sm:grid-cols-[auto_1fr] sm:gap-5 md:gap-8 ${i ? "invisible" : ""}`}>
+            <div className="grid aspect-square w-full max-h-56 place-items-center bg-orange text-on-orange sm:h-[70%] sm:w-auto">
+              <span className="font-display text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl md:text-7xl">{f.initials}</span>
             </div>
             <div>
               <p className="t-h3">{f.name}</p>

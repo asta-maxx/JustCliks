@@ -33,9 +33,10 @@ export function ClientBand() {
     <section id="clients" aria-labelledby="clients-title" className="scroll-mt-[4.5rem] border-y border-line py-7">
       <div className="wrap flex items-baseline justify-between gap-4">
         <h2 id="clients-title" className="t-label text-muted">
-          Brands and people we work with
+          <span className="sm:hidden">Our clients</span>
+          <span className="hidden sm:inline">Brands and people we work with</span>
         </h2>
-        <p className="t-label text-muted">{tagged.length} and counting</p>
+        <p className="t-label hidden text-muted sm:block">{tagged.length} and counting</p>
       </div>
       <div className="mt-5 overflow-hidden">
         <div className="marquee-track flex w-max motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:gap-y-3">

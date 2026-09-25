@@ -42,7 +42,8 @@ export function Stats() {
           start: "top top+=72",
           end: () => `+=${window.innerHeight * 0.5 * (steps.length - 1)}`,
           pin: true,
-          snap: { snapTo: 1 / (steps.length - 1), duration: { min: 0.2, max: 0.4 }, ease: "power2.inOut" },
+          // Snapping only with a mouse or trackpad. On touch screens it fights the finger.
+          snap: ScrollTrigger.isTouch ? undefined : { snapTo: 1 / (steps.length - 1), duration: { min: 0.2, max: 0.4 }, ease: "power2.inOut" },
           onUpdate: (self) => setStep(Math.round(self.progress * (steps.length - 1))),
         });
       });

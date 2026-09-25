@@ -9,6 +9,8 @@ import { Poster } from "./Poster";
 const PAN = `(min-width: 1024px) and ${MOTION_OK}`;
 
 // Desktop: vertical scroll pans the reel sideways. Smaller screens: swipe.
+// Below desktop the swipe row is paint-contained: without it, phones treat
+// the row's width as page width, zoom everything out and stop scrolling early.
 export function Work() {
   const wrap = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ export function Work() {
 
         <div
           ref={track}
-          className="mt-10 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-24 md:scroll-px-10 md:px-10 lg:mt-12 lg:snap-none lg:gap-5 lg:overflow-visible lg:pb-0 xl:px-[max(2.5rem,calc((100vw-1320px)/2+2.5rem))]"
+          className="mt-10 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-24 max-lg:[contain:paint] md:scroll-px-10 md:px-10 lg:mt-12 lg:snap-none lg:gap-5 lg:overflow-visible lg:pb-0 xl:px-[max(2.5rem,calc((100vw-1320px)/2+2.5rem))]"
         >
           {work.map((w) => (
             <article key={w.title} className="w-[72vw] shrink-0 snap-start sm:w-[42vw] lg:w-[min(21rem,24vw)]">

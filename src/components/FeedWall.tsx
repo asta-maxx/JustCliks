@@ -98,11 +98,13 @@ export function FeedWall() {
     () => {
       const measure = () => {
         const tracks = gsap.utils.toArray<HTMLElement>(".wall-track", root.current);
-        const h = wall.current!.clientHeight;
+        const h = wall.current!.getBoundingClientRect().height;
+        // Exact (fractional) sizes: whole-pixel offsets drift half a pixel per
+        // post, which adds up to posts landing visibly off-centre in the frame.
         geo.current = tracks.map((el) => {
-          const a = el.children[0] as HTMLElement;
-          const b = el.children[1] as HTMLElement;
-          return { el, step: b.offsetTop - a.offsetTop, center: (h - a.offsetHeight) / 2 };
+          const a = (el.children[0] as HTMLElement).getBoundingClientRect();
+          const b = (el.children[1] as HTMLElement).getBoundingClientRect();
+          return { el, step: b.top - a.top, center: (h - a.height) / 2 };
         });
         place();
       };
@@ -151,7 +153,14 @@ export function FeedWall() {
       </svg>
 
       {/* Labels say what the wall means before anyone has to work it out */}
-      <div aria-hidden className="mb-3 flex justify-center gap-2.5 sm:gap-4">
+      <p className="mb-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-sm text-muted sm:hidden">
+        Everyone else&apos;s posts blur past.
+        <span className="flex items-center gap-1.5 font-display font-extrabold text-fg">
+          <span aria-hidden className="size-2.5 bg-orange" />
+          Yours stop.
+        </span>
+      </p>
+      <div aria-hidden className="mb-3 hidden justify-center gap-2.5 sm:flex sm:gap-4">
         {COLUMNS.map((c) => (
           <div key={c.id} className={`relative h-8 shrink-0 ${c.cls}`}>
             {c.id === "l1" && (

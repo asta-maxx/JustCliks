@@ -36,7 +36,10 @@ export function Nav() {
   // Past the top, the header turns ink; the link for the section in view is underlined.
   useGSAP(
     () => {
-      ScrollTrigger.create({ start: 24, end: "max", onToggle: (self) => setScrolled(self.isActive) });
+      // Stays ink all the way to the bottom (a start/end toggle would switch off at the very end).
+      const check = (y: number) => setScrolled(y > 24);
+      check(window.scrollY);
+      ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => check(self.scroll()) });
       gsap.fromTo(".nav-progress", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } });
       links.forEach(({ href }) => {
         const id = href.split("#")[1];
