@@ -129,11 +129,11 @@ export function Brief() {
                   aria-checked={on}
                   onClick={() => chooseGoal(g.id)}
                   className={`flex items-center justify-between gap-4 border-b border-line py-3.5 text-left font-bold ${
-                    on ? "text-orange" : "text-fg hover:text-muted"
+                    on ? "text-fg" : "text-muted hover:text-fg"
                   }`}
                 >
                   {g.label}
-                  <span aria-hidden className={`size-2.5 shrink-0 ${on ? "bg-orange" : "border border-dim"}`} />
+                  <span aria-hidden className={`size-2.5 shrink-0 ${on ? "bg-orange" : "border border-line-strong"}`} />
                 </button>
               );
             })}
@@ -194,7 +194,7 @@ export function Brief() {
                       aria-describedby={errors.name ? `${uid}-name-err` : undefined}
                     />
                     {errors.name && (
-                      <p id={`${uid}-name-err`} className="text-sm font-bold text-orange">
+                      <p id={`${uid}-name-err`} className="text-sm font-bold text-orange-ink">
                         {errors.name}
                       </p>
                     )}
@@ -228,7 +228,7 @@ export function Brief() {
                       aria-describedby={errors.email ? `${uid}-email-err` : undefined}
                     />
                     {errors.email && (
-                      <p id={`${uid}-email-err`} className="text-sm font-bold text-orange">
+                      <p id={`${uid}-email-err`} className="text-sm font-bold text-orange-ink">
                         {errors.email}
                       </p>
                     )}
@@ -236,7 +236,7 @@ export function Brief() {
                 </div>
                 <p
                   id={`${uid}-contact-help`}
-                  className={`-mt-2 text-sm ${errors.contact ? "font-bold text-orange" : "text-muted"}`}
+                  className={`-mt-2 text-sm ${errors.contact ? "font-bold text-orange-ink" : "text-muted"}`}
                 >
                   {errors.contact ?? "One of phone or email is enough."}
                 </p>
@@ -254,7 +254,7 @@ export function Brief() {
                 </div>
 
                 {status === "error" && (
-                  <p role="alert" className="border border-orange p-4 text-sm font-bold text-orange">
+                  <p role="alert" className="border-[1.5px] border-orange p-4 text-sm font-bold text-orange-ink">
                     {serverError}{" "}
                     {whatsappLink ? (
                       <a className="underline" href={whatsappLink}>

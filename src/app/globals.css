@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 /*
-  JustCliks: The Scroll Stopper.
-  Orange, black and white. Sharp corners. No shadows, glows or glass.
+  JustCliks: The Scroll Stopper, built from the logo.
+  Paper, ink and the logo orange (#F68C25). Orange is a fill, a mark or a
+  line; it is too light to carry small text on paper, so small orange text
+  uses --orange-ink. Sharp corners. No shadows, glows or glass.
   Hover swaps colour instantly; nothing animates on hover.
 
   Grid: every section sits in .wrap (1320px, 20px / 40px gutters) on a
@@ -22,16 +24,20 @@
 */
 
 :root {
-  --bg: #0b0b0b;
-  --surface: #141414;
-  --surface-2: #1d1d1d;
-  --fg: #f4f2ee;
-  --muted: #9b9892;
-  --dim: #5f5d59;
-  --line: rgb(244 242 238 / 0.12);
-  --orange: #f26522;
-  --on-orange: #0b0b0b;
-  color-scheme: dark;
+  /* From the logo: warm paper, logo ink, logo orange */
+  --bg: #f5f3ee;
+  --surface: #ebe8e1;
+  --surface-2: #e0dcd3;
+  --fg: #1c1c1b;
+  --muted: #5c5953;
+  --dim: #8f8b83;
+  --line: rgb(28 28 27 / 0.14);
+  --line-strong: rgb(28 28 27 / 0.35);
+  --orange: #f68c25;
+  --orange-ink: #a24f08; /* orange for small text on paper, passes AA */
+  --on-orange: #1c1c1b;
+  --flash: #fffdf8;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -42,8 +48,11 @@
   --color-muted: var(--muted);
   --color-dim: var(--dim);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-orange: var(--orange);
+  --color-orange-ink: var(--orange-ink);
   --color-on-orange: var(--on-orange);
+  --color-flash: var(--flash);
   /* aliases used by shadcn components */
   --color-paper: var(--bg);
   --color-ink: var(--fg);
@@ -75,7 +84,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--orange);
+  outline: 2px solid var(--fg);
   outline-offset: 3px;
 }
 
@@ -162,7 +171,7 @@ body {
     color: var(--bg);
   }
   .btn-ghost {
-    border-color: rgb(244 242 238 / 0.3);
+    border-color: var(--line-strong);
     color: var(--fg);
   }
   .btn-ghost:hover {
@@ -181,6 +190,22 @@ body {
   }
 }
 
+/* Orange highlighter behind a word, like a marker pass */
+.mark {
+  position: relative;
+  white-space: nowrap;
+  isolation: isolate;
+}
+.mark::before {
+  content: "";
+  position: absolute;
+  inset: 0.08em -0.08em 0.02em;
+  z-index: -1;
+  background: var(--orange);
+  transform-origin: left center;
+  transform: scaleX(var(--mark, 1));
+}
+
 /* Soft top and bottom fade on the feed window */
 .feed-mask {
   mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
@@ -189,7 +214,7 @@ body {
 /* Skeleton for media that is still loading */
 .skeleton {
   background-color: var(--surface);
-  background-image: linear-gradient(100deg, transparent 30%, rgb(244 242 238 / 0.06) 50%, transparent 70%);
+  background-image: linear-gradient(100deg, transparent 30%, rgb(28 28 27 / 0.05) 50%, transparent 70%);
   background-size: 250% 100%;
   animation: skeleton 1.4s linear infinite;
 }

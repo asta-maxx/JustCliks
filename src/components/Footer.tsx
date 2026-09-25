@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site, whatsappLink } from "@/lib/site";
+import { FooterCredit } from "./FooterCredit";
 import { Logo } from "./Logo";
 
 export function Footer() {
@@ -18,8 +19,8 @@ export function Footer() {
     <footer className="border-t border-line">
       <div className="wrap grid gap-12 py-16 md:grid-cols-12 md:gap-10 md:py-20">
         <div className="md:col-span-5">
-          <Link href="/" aria-label="JustCliks home" className="text-[1.5rem]">
-            <Logo />
+          <Link href="/" aria-label="JustCliks home" className="inline-block">
+            <Logo height={84} />
           </Link>
           <p className="mt-4 max-w-[34ch] text-muted">
             Content, social media, branding, influencer marketing and video production.
@@ -28,7 +29,7 @@ export function Footer() {
         </div>
 
         <nav aria-label="Footer" className="md:col-span-2 md:col-start-7">
-          <p className="t-label text-dim">Site</p>
+          <p className="t-label text-muted">Site</p>
           <ul className="mt-4 grid gap-2 font-bold">
             <li><Link className="link" href="/#services">Services</Link></li>
             <li><Link className="link" href="/#work">Work</Link></li>
@@ -38,7 +39,7 @@ export function Footer() {
         </nav>
 
         <div className="md:col-span-2">
-          <p className="t-label text-dim">Legal</p>
+          <p className="t-label text-muted">Legal</p>
           <ul className="mt-4 grid gap-2 font-bold">
             <li><Link className="link" href="/privacy">Privacy policy</Link></li>
             <li><Link className="link" href="/terms">Terms of service</Link></li>
@@ -47,7 +48,7 @@ export function Footer() {
 
         {(contact.length > 0 || socials.length > 0) && (
           <div className="md:col-span-2">
-            <p className="t-label text-dim">Contact</p>
+            <p className="t-label text-muted">Contact</p>
             <ul className="mt-4 grid gap-2 font-bold">
               {contact.map((c) => (
                 <li key={c.href}><a className="link" href={c.href}>{c.label}</a></li>
@@ -60,9 +61,11 @@ export function Footer() {
         )}
       </div>
 
-      <div className="wrap flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 text-sm text-muted">
-        <p>© {new Date().getFullYear()} JustCliks. All rights reserved.</p>
-        <p>Made to stop the scroll.</p>
+      <div className="wrap">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-line py-6 text-sm text-muted">
+          <p>© {new Date().getFullYear()} JustCliks. All rights reserved.</p>
+          <FooterCredit />
+        </div>
       </div>
     </footer>
   );

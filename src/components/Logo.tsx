@@ -1,12 +1,26 @@
-export function Logo({ className = "" }: { className?: string }) {
+import Image from "next/image";
+import logo from "../../public/brand/justcliks-logo.png";
+import logoLight from "../../public/brand/justcliks-logo-light.png";
+
+type Props = {
+  height?: number;
+  // "light" is for dark backgrounds: the ink turns to paper, the orange stays.
+  variant?: "ink" | "light";
+  priority?: boolean;
+  className?: string;
+};
+
+export function Logo({ height = 44, variant = "ink", priority = false, className = "" }: Props) {
+  const src = variant === "light" ? logoLight : logo;
   return (
-    <span className={`inline-flex items-center gap-2 font-display font-extrabold tracking-[-0.03em] ${className}`}>
-      <span aria-hidden className="grid size-[1.15em] place-items-center bg-orange">
-        <span className="size-[0.42em] bg-bg" />
-      </span>
-      <span>
-        Just<span className="text-orange">Cliks</span>
-      </span>
-    </span>
+    <Image
+      src={src}
+      alt="JustCliks"
+      height={height}
+      width={Math.round((height * src.width) / src.height)}
+      priority={priority}
+      className={`block select-none ${className}`}
+      style={{ height, width: "auto" }}
+    />
   );
 }

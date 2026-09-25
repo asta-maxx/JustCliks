@@ -28,8 +28,8 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <nav aria-label="Main" className="wrap flex h-[4.5rem] items-center justify-between">
-        <Link href="/" aria-label="JustCliks home" className="text-[1.3rem]">
-          <Logo />
+        <Link href="/" aria-label="JustCliks home">
+          <Logo height={54} priority />
         </Link>
 
         <div className="hidden items-center gap-9 md:flex">

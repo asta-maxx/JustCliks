@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Aperture } from "@phosphor-icons/react";
 import { feed } from "@/lib/content";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
@@ -124,6 +124,14 @@ export function ScrollStopper() {
     { scope: root },
   );
 
+  // The hero's brand cursor presses Clik by firing this event.
+  const onAutoClik = useEffectEvent(() => clik());
+  useEffect(() => {
+    const h = () => onAutoClik();
+    window.addEventListener("jc:clik", h);
+    return () => window.removeEventListener("jc:clik", h);
+  }, []);
+
   function clik() {
     wait.current?.kill();
     tween.current?.kill();
@@ -166,33 +174,33 @@ export function ScrollStopper() {
           aria-hidden
           className="pointer-events-none absolute inset-x-[-12px] top-1/2 aspect-[4/5] -translate-y-1/2"
         >
-          <span className="absolute left-0 top-0 size-6 border-l-2 border-t-2 border-orange" />
-          <span className="absolute right-0 top-0 size-6 border-r-2 border-t-2 border-orange" />
-          <span className="absolute bottom-0 left-0 size-6 border-b-2 border-l-2 border-orange" />
-          <span className="absolute bottom-0 right-0 size-6 border-b-2 border-r-2 border-orange" />
+          <span className="absolute left-0 top-0 size-6 border-l-[3px] border-t-[3px] border-fg" />
+          <span className="absolute right-0 top-0 size-6 border-r-[3px] border-t-[3px] border-fg" />
+          <span className="absolute bottom-0 left-0 size-6 border-b-[3px] border-l-[3px] border-fg" />
+          <span className="absolute bottom-0 right-0 size-6 border-b-[3px] border-r-[3px] border-fg" />
         </div>
         <div
           ref={flash}
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-1/2 aspect-[4/5] -translate-y-1/2 bg-fg opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-1/2 aspect-[4/5] -translate-y-1/2 bg-flash opacity-0"
         />
       </div>
 
       <div className="flex w-[min(300px,78vw)] flex-col gap-5 sm:w-44">
         <div aria-live="polite">
-          <p className="t-label text-orange">Stopped on</p>
+          <p className="t-label text-orange-ink">Stopped on</p>
           <p className="mt-2 font-display text-xl font-extrabold leading-tight tracking-[-0.02em]">{landed.title}</p>
           <p className="mt-1 text-sm text-muted">{landed.tag}</p>
         </div>
         <div className="h-px bg-line" />
         <div>
-          <button type="button" onClick={clik} className="btn btn-primary w-full">
+          <button type="button" data-clik onClick={clik} className="btn btn-primary w-full">
             <Aperture size={20} weight="bold" aria-hidden />
             Clik
           </button>
           <p className="mt-2 text-sm text-muted">Stop the feed yourself.</p>
         </div>
-        <p className="t-label text-dim">Stops {String(stops).padStart(2, "0")}</p>
+        <p className="t-label text-muted">Stops {String(stops).padStart(2, "0")}</p>
       </div>
     </div>
   );

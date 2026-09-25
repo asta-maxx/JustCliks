@@ -24,7 +24,7 @@ const Stage = ({ label, aside, children }: { label: string; aside?: string; chil
   <div className="flex h-full flex-col gap-4 p-5 md:p-7">
     <div className="flex items-baseline justify-between gap-4">
       <p className="t-label text-muted">{label}</p>
-      {aside && <p className="t-label text-orange">{aside}</p>}
+      {aside && <p className="t-label text-orange-ink">{aside}</p>}
     </div>
     <div className="relative min-h-0 flex-1">{children}</div>
   </div>
@@ -36,15 +36,15 @@ const social = ["Aasife", "Meat Mr. Dosa", "2021 Mobiles", "NS", "Krishna", "Sow
 const slots: Record<number, { type: string; tone: string }> = {
   0: { type: "Reel", tone: "bg-orange text-on-orange" },
   2: { type: "Post", tone: "bg-fg text-bg" },
-  3: { type: "Story", tone: "bg-surface text-fg" },
+  3: { type: "Story", tone: "bg-bg text-fg" },
   5: { type: "Reel", tone: "bg-orange text-on-orange" },
   8: { type: "Post", tone: "bg-fg text-bg" },
   9: { type: "Reel", tone: "bg-orange text-on-orange" },
-  11: { type: "Story", tone: "bg-surface text-fg" },
+  11: { type: "Story", tone: "bg-bg text-fg" },
   13: { type: "Post", tone: "bg-fg text-bg" },
   14: { type: "Reel", tone: "bg-orange text-on-orange" },
   16: { type: "Post", tone: "bg-fg text-bg" },
-  18: { type: "Story", tone: "bg-surface text-fg" },
+  18: { type: "Story", tone: "bg-bg text-fg" },
   20: { type: "Reel", tone: "bg-orange text-on-orange" },
 };
 
@@ -59,7 +59,7 @@ function SocialVisual({ play }: VisualProps) {
       <Stage label="Posting calendar" aside="Festival week">
         <div className="grid h-full grid-cols-7 grid-rows-[auto_1fr_1fr_1fr] gap-1.5">
           {days.map((d) => (
-            <p key={d} className="t-label pb-1 text-center text-[0.625rem] text-dim">
+            <p key={d} className="t-label pb-1 text-center text-[0.625rem] text-muted">
               {d}
             </p>
           ))}
@@ -170,7 +170,7 @@ function InfluencerVisual({ play }: VisualProps) {
         <svg viewBox="0 0 600 300" className="h-full w-full" role="img" aria-label="One brand brief sent to five kinds of creators">
           {creators.map((_, i) => {
             const cx = 60 + i * 120;
-            return <path key={i} className="wire" d={`M300 64 V150 H${cx} V226`} fill="none" stroke="rgb(244 242 238 / 0.35)" strokeWidth="1.5" />;
+            return <path key={i} className="wire" d={`M300 64 V150 H${cx} V226`} fill="none" stroke="rgb(28 28 27 / 0.4)" strokeWidth="1.5" />;
           })}
           {creators.map((_, i) => (
             <rect key={i} className="brief" x="296" y="60" width="8" height="8" fill="var(--orange)" />
@@ -233,14 +233,14 @@ function VideoVisual({ play }: VisualProps) {
         <div className="flex h-full flex-col gap-3">
           <div className="relative flex min-h-0 flex-1 items-center justify-center border border-line bg-bg">
             <p className="font-display text-lg font-extrabold tracking-[-0.02em] md:text-2xl">Tamil Christian song</p>
-            <span ref={tc} className="t-label absolute bottom-2 right-3 text-orange">
+            <span ref={tc} className="t-label absolute bottom-2 right-3 text-orange-ink">
               00:00:00:00
             </span>
           </div>
           <div className="relative grid grid-cols-[2.5rem_1fr] gap-y-1.5">
             {tracks.map((t) => (
               <div key={t.name} className="contents">
-                <span className="t-label self-center text-[0.625rem] text-dim">{t.name}</span>
+                <span className="t-label self-center text-[0.625rem] text-muted">{t.name}</span>
                 <div className="relative h-6 bg-surface-2">
                   {t.clips.map(([l, w, c], i) => (
                     <span key={i} className={`absolute inset-y-0.5 ${c}`} style={{ left: `${l}%`, width: `${w - 1}%` }} />
@@ -286,9 +286,9 @@ function PersonalVisual({ play }: VisualProps) {
               <p className="t-h3">{f.name}</p>
               <p className="mt-1 text-muted">{f.role}</p>
               <ul className="mt-5 grid gap-2 border-t border-line pt-4 text-sm">
-                <li className="flex justify-between gap-4"><span>Your story</span><span className="t-label text-orange">Shaped</span></li>
-                <li className="flex justify-between gap-4"><span>On camera</span><span className="t-label text-orange">Coached</span></li>
-                <li className="flex justify-between gap-4"><span>Posting</span><span className="t-label text-orange">Weekly</span></li>
+                <li className="flex justify-between gap-4"><span>Your story</span><span className="t-label text-orange-ink">Shaped</span></li>
+                <li className="flex justify-between gap-4"><span>On camera</span><span className="t-label text-orange-ink">Coached</span></li>
+                <li className="flex justify-between gap-4"><span>Posting</span><span className="t-label text-orange-ink">Weekly</span></li>
               </ul>
             </div>
           </div>
@@ -300,9 +300,9 @@ function PersonalVisual({ play }: VisualProps) {
 
 /* Branding: a brand kit that holds together */
 const swatches = [
-  { name: "Orange", hex: "#F26522", cls: "bg-orange" },
-  { name: "Black", hex: "#0B0B0B", cls: "bg-bg border border-line" },
-  { name: "White", hex: "#F4F2EE", cls: "bg-fg" },
+  { name: "Orange", hex: "#F68C25", cls: "bg-orange" },
+  { name: "Ink", hex: "#1C1C1B", cls: "bg-fg" },
+  { name: "Paper", hex: "#F5F3EE", cls: "bg-bg border border-line" },
 ];
 function BrandingVisual({ play }: VisualProps) {
   const ref = useRef<HTMLDivElement>(null);

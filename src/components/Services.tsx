@@ -19,7 +19,7 @@ function Detail({ s }: { s: Service }) {
       <div className="md:col-span-3">
         {s.clients.length > 0 ? (
           <>
-            <p className="t-label text-dim">Done for</p>
+            <p className="t-label text-muted">Done for</p>
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {s.clients.map((c) => (
                 <li key={c} className="border border-line px-2.5 py-1 text-[0.8125rem] font-bold">
@@ -30,7 +30,7 @@ function Detail({ s }: { s: Service }) {
           </>
         ) : (
           <>
-            <p className="t-label text-dim">Where it shows up</p>
+            <p className="t-label text-muted">Where it shows up</p>
             <p className="mt-3 text-[0.9375rem] font-bold">{s.note}</p>
           </>
         )}
@@ -49,7 +49,7 @@ function MobileBlock({ s, i }: { s: Service; i: number }) {
   }, { scope: ref });
   return (
     <article ref={ref} className="min-w-0 border-t border-line pt-6">
-      <p className="t-label text-orange">{num(i)}</p>
+      <p className="t-label text-orange-ink">{num(i)}</p>
       <div className="mt-4 aspect-[4/3] border border-line bg-surface sm:aspect-[16/10]">
         <Visual play={inView} />
       </div>
@@ -113,7 +113,7 @@ export function Services() {
 
   return (
     <section ref={root} id="services" aria-labelledby="services-title" className="scroll-mt-[4.5rem]">
-      <div className="wrap pt-28 md:pt-40">
+      <div className="wrap pt-24 md:pt-28">
         <div className="grid gap-6 lg:grid-cols-12">
           <h2 id="services-title" className="t-h2 lg:col-span-6">
             Six ways we get you noticed.
@@ -132,9 +132,9 @@ export function Services() {
                   type="button"
                   onClick={() => go(i)}
                   aria-current={i === active ? "true" : undefined}
-                  className={`flex w-full items-baseline gap-4 py-4 text-left ${i === active ? "text-fg" : "text-dim hover:text-muted"}`}
+                  className={`flex w-full items-baseline gap-4 py-4 text-left ${i === active ? "text-fg" : "text-muted/70 hover:text-fg"}`}
                 >
-                  <span className={`t-label ${i === active ? "text-orange" : ""}`}>{num(i)}</span>
+                  <span className={`t-label ${i === active ? "text-orange-ink" : ""}`}>{num(i)}</span>
                   <span className="font-display text-[1.375rem] font-extrabold tracking-[-0.02em]">{svc.name}</span>
                 </button>
               </li>

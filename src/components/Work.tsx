@@ -68,7 +68,7 @@ export function Work() {
               </div>
               <h3 className="mt-4 font-display text-lg font-extrabold tracking-[-0.02em]">{w.title}</h3>
               <p className="mt-1 text-sm text-muted">
-                <span className="text-orange">{w.service}</span> <span className="text-dim">/</span> {w.detail}
+                <span className="font-bold text-orange-ink">{w.service}</span> <span className="text-dim">/</span> {w.detail}
               </p>
             </article>
           ))}
