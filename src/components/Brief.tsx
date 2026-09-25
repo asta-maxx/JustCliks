@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import { toast } from "sonner";
+import { WhatsappLogo } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -100,6 +101,7 @@ export function Brief() {
   }
 
   const reset = () => {
+    if (post.current) gsap.set(post.current, { clearProps: "all" });
     setStatus("idle");
     setValues(blank);
     setPicked([]);
@@ -112,8 +114,8 @@ export function Brief() {
 
   return (
     <section id="contact" aria-labelledby="contact-title" className="scroll-mt-[4.5rem] border-t border-line">
-      <div className="wrap grid gap-14 py-28 md:py-40 lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-4">
+      <div className="wrap section-y grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-5 xl:col-span-4">
           <h2 id="contact-title" className="t-h2">
             Let&apos;s make something people stop for.
           </h2>
@@ -138,9 +140,35 @@ export function Brief() {
               );
             })}
           </div>
+
+          {whatsappLink && (
+            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn btn-ink mt-6 w-full sm:w-auto">
+              <WhatsappLogo size={20} weight="bold" aria-hidden />
+              Rather chat? WhatsApp us
+            </a>
+          )}
+
+          {/* Live preview: their first post, built from the goal and the form */}
+          <aside aria-label="Preview of your first post" className="mt-10 hidden max-w-[18rem] lg:block">
+            <p className="t-label text-muted">Your first post</p>
+            <div ref={post} className="mt-3 aspect-[4/5] w-full">
+              <PostFrame className="bg-orange text-on-orange">
+                <p className="t-label text-[3.6cqw]">{show}</p>
+                <div>
+                  <p className="font-display text-[14cqw] font-extrabold leading-[0.98] tracking-[-0.035em] [overflow-wrap:anywhere]">
+                    {starring}
+                  </p>
+                  <p className="mt-[4cqw] text-[4.6cqw] font-bold">
+                    {picked.length ? picked.map(serviceName).join(" + ") : "Crew to be decided"}
+                  </p>
+                </div>
+              </PostFrame>
+            </div>
+            <p className="mt-3 text-sm text-muted">It fills in as you type.</p>
+          </aside>
         </div>
 
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-7 xl:col-span-7 xl:col-start-6">
           {status === "sent" ? (
             <div
               aria-live="polite"
@@ -158,8 +186,8 @@ export function Brief() {
               </div>
             </div>
           ) : (
-            <div className="grid gap-10 md:grid-cols-8">
-              <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6 md:col-span-5">
+            <div>
+              <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6">
                 <fieldset>
                   <legend className="text-sm font-bold">Services</legend>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -288,26 +316,6 @@ export function Brief() {
                 </div>
               </form>
 
-              {/* Live preview: their first post */}
-              <aside aria-label="Preview of your first post" className="md:col-span-3">
-                <div className="md:sticky md:top-28">
-                  <p className="t-label text-muted">Your first post</p>
-                  <div ref={post} className="mt-3 aspect-[4/5] w-full">
-                    <PostFrame className="bg-orange text-on-orange">
-                      <p className="t-label text-[3.6cqw]">{show}</p>
-                      <div>
-                        <p className="font-display text-[14cqw] font-extrabold leading-[0.98] tracking-[-0.035em] [overflow-wrap:anywhere]">
-                          {starring}
-                        </p>
-                        <p className="mt-[4cqw] text-[4.6cqw] font-bold">
-                          {picked.length ? picked.map(serviceName).join(" + ") : "Crew to be decided"}
-                        </p>
-                      </div>
-                    </PostFrame>
-                  </div>
-                  <p className="mt-3 text-sm text-muted">It fills in as you type.</p>
-                </div>
-              </aside>
             </div>
           )}
         </div>

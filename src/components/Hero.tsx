@@ -6,7 +6,7 @@ import { noisePosts } from "@/lib/content";
 import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
 import { FeedCard, PostFrame } from "./FeedCard";
 import { Logo } from "./Logo";
-import { ScrollStopper } from "./ScrollStopper";
+import { FeedWall } from "./FeedWall";
 
 const introFeed = noisePosts.map((title, i) => ({
   kind: "noise" as const,
@@ -14,6 +14,13 @@ const introFeed = noisePosts.map((title, i) => ({
   tag: i % 3 === 1 ? "Sponsored" : "Suggested",
   tone: "paper" as const,
 }));
+
+const ARROW = (
+  <svg aria-hidden viewBox="0 0 120 80" className="ml-[0.12em] inline-block h-[0.9em] w-[1.35em] overflow-visible align-[-0.04em]">
+    <path className="growth-line" d="M4 74 C 40 72, 72 56, 96 22" fill="none" stroke="var(--orange)" strokeWidth="11" />
+    <polygon className="growth-head" points="80,14 116,0 112,38" fill="var(--orange)" />
+  </svg>
+);
 
 // First visit: a feed of generic posts blurs past and brakes hard on one
 // orange post. Flash, and the page opens. Later visits skip straight in.
@@ -73,31 +80,15 @@ export function Hero() {
 
         tl.from(".hero-in", { y: 28, autoAlpha: 0, duration: 0.9, stagger: 0.08, ease: "expo.out" }, seen ? 0 : "-=0.45");
 
-        // The logo's orange marker sweeps under "stop", then its growth arrow draws up through the headline.
-        const arrow = root.current!.querySelector<SVGPathElement>(".growth-line")!;
-        const len = arrow.getTotalLength();
-        tl.fromTo(".hero-mark", { "--mark": 0 }, { "--mark": 1, duration: 0.5, ease: "power3.out", immediateRender: false }, "-=0.5")
-          .fromTo(arrow, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut" }, "-=0.1")
-          .fromTo(".growth-head", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, ease: "back.out(3)", immediateRender: false }, "-=0.15");
+        // The logo's orange marker sweeps under "stop", then its growth arrow draws up out of it.
+        const arrows = gsap.utils.toArray<SVGPathElement>(".growth-line");
+        tl.fromTo(".hero-mark", { "--mark": 0 }, { "--mark": 1, duration: 0.5, ease: "power3.out", immediateRender: false }, "-=0.5");
+        arrows.forEach((arrow, i) => {
+          const len = arrow.getTotalLength() || 140;
+          tl.fromTo(arrow, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut", immediateRender: false }, i ? "<" : ">");
+        });
+        tl.fromTo(".growth-head", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, ease: "back.out(3)", immediateRender: false }, "-=0.15");
 
-        // Then the logo's cursor glides over and clicks Clik, stopping the feed.
-        tl.call(() => {
-          const btn = root.current!.querySelector<HTMLElement>("[data-clik]");
-          const cursor = root.current!.querySelector<HTMLElement>(".brand-cursor");
-          const ripple = root.current!.querySelector<HTMLElement>(".click-ripple");
-          if (!btn || !cursor || !ripple || btn.offsetParent === null) return;
-          const box = root.current!.getBoundingClientRect();
-          const b = btn.getBoundingClientRect();
-          const tx = b.left - box.left + b.width * 0.62;
-          const ty = b.top - box.top + b.height * 0.55;
-          gsap
-            .timeline()
-            .fromTo(cursor, { x: tx - 260, y: ty + 220, autoAlpha: 0 }, { x: tx, y: ty, autoAlpha: 1, duration: 1.1, ease: "power3.inOut" })
-            .to(cursor, { scale: 0.8, duration: 0.09, yoyo: true, repeat: 1, transformOrigin: "0 0" })
-            .call(() => window.dispatchEvent(new Event("jc:clik")))
-            .fromTo(ripple, { x: tx - 18, y: ty - 18, scale: 0.3, autoAlpha: 1 }, { scale: 1.6, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, "<")
-            .to(cursor, { x: tx + 90, y: ty + 140, autoAlpha: 0, duration: 0.9, ease: "power2.in" }, "+=0.5");
-        }, undefined, "+=0.4");
       });
       return () => mm.revert();
     },
@@ -147,44 +138,56 @@ export function Hero() {
         </button>
       </div>
 
-      <div className="wrap grid min-h-[calc(100svh-4.5rem)] grid-cols-1 items-center gap-14 py-16 lg:grid-cols-12 lg:gap-10 lg:py-12">
-        <div className="lg:col-span-6">
-          <div className="hero-in relative">
-            <svg
-              aria-hidden
-              viewBox="0 0 600 320"
-              className="pointer-events-none absolute -top-6 right-5 h-[118%] w-[84%] overflow-visible sm:-right-2 sm:-top-10 sm:h-[125%] sm:w-[92%] md:-right-8"
-            >
-              <path className="growth-line" d="M4 300 C 170 285, 330 240, 452 118 S 540 38, 560 22" fill="none" stroke="var(--orange)" strokeWidth="14" />
-              <polygon className="growth-head" points="530,8 596,0 584,62" fill="var(--orange)" />
-            </svg>
-            <h1 id="hero-title" className="t-display relative max-w-[13ch]">
-              We make the posts people <span className="mark hero-mark">stop</span> scrolling for.
-            </h1>
-          </div>
-          <p className="hero-in t-lead mt-6 max-w-[44ch]">
-            Content, social media, branding, influencer campaigns and video for restaurants, caterers, creators and
-            founders.
-          </p>
-          <div className="hero-in mt-9 flex flex-wrap gap-3">
-            <Link href="#contact" className="btn btn-primary">
-              Start a project
-            </Link>
-            <Link href="#work" className="btn btn-ghost">
-              See the work
-            </Link>
-          </div>
+      {/* One centred stage: the headline, then the wall of feeds it is about,
+          then the controls and the pitch. Same order on every screen. */}
+      <div className="wrap flex min-h-[calc(100svh-4.5rem)] flex-col justify-center pb-10 pt-6 sm:pt-10 lg:pb-8">
+        {/* Who we are, in one plain line */}
+        <p className="hero-in t-label mx-auto text-center text-orange-ink">
+          <span className="sm:hidden">Social media agency, Tamil Nadu</span>
+          <span className="hidden sm:inline">Social media &amp; content agency, Tamil Nadu</span>
+        </p>
+
+        {/* Line breaks are set per screen so no word is ever left alone:
+            three lines on phones, two from tablet up. */}
+        <h1 id="hero-title" className="hero-in t-display mx-auto mt-4 text-center text-[clamp(2.4rem,5vw,4.6rem)]">
+          <span className="sr-only">We make the posts people stop scrolling for.</span>
+          <span aria-hidden className="block sm:hidden">
+            <span className="block">We make the posts</span>
+            <span className="block">
+              people <span className="mark hero-mark">stop</span>
+            </span>
+            <span className="block">
+              scrolling for.
+              {ARROW}
+            </span>
+          </span>
+          <span aria-hidden className="hidden sm:block">
+            <span className="block">We make the posts people</span>
+            <span className="block whitespace-nowrap">
+              <span className="mark hero-mark">stop</span> scrolling for.
+              {ARROW}
+            </span>
+          </span>
+        </h1>
+
+        {/* What we do, said plainly, and the next step */}
+        <p className="hero-in t-lead mx-auto mt-5 max-w-[50ch] text-center">
+          We plan, shoot and post content for restaurants, caterers, creators and founders, so your brand is the one
+          people stop for.
+        </p>
+        <div className="hero-in mt-7 flex flex-wrap justify-center gap-3">
+          <Link href="#contact" className="btn btn-primary">
+            Start a project
+          </Link>
+          <Link href="#work" className="btn btn-ghost">
+            See the work
+          </Link>
         </div>
-        <div className="hero-in lg:col-span-6">
-          <ScrollStopper />
+
+        <div className="hero-in mt-10 sm:mt-12">
+          <FeedWall />
         </div>
       </div>
-
-      {/* The logo's cursor, used once to click the feed to a stop */}
-      <svg aria-hidden viewBox="0 0 64 64" className="brand-cursor pointer-events-none absolute left-0 top-0 z-10 size-12 opacity-0">
-        <path d="M6 4 L54 20 L34 28 L50 50 L42 58 L26 36 L14 52 Z" fill="var(--fg)" stroke="var(--bg)" strokeWidth="3" strokeLinejoin="round" />
-      </svg>
-      <span aria-hidden className="click-ripple pointer-events-none absolute left-0 top-0 z-10 size-9 border-[3px] border-orange opacity-0" />
     </section>
   );
 }

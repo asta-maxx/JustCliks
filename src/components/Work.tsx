@@ -44,7 +44,7 @@ export function Work() {
   return (
     <section ref={wrap} id="work" aria-labelledby="work-title" className="scroll-mt-[4.5rem] overflow-hidden border-t border-line">
       <div className="lg:flex lg:h-[calc(100svh-4.5rem)] lg:flex-col lg:justify-center">
-        <div className="wrap grid gap-6 pt-28 lg:grid-cols-12 lg:pt-0">
+        <div className="wrap grid gap-6 pt-24 md:pt-32 lg:grid-cols-12 lg:pt-0">
           <h2 id="work-title" className="t-h2 lg:col-span-6">
             Recent work.
           </h2>
@@ -61,15 +61,20 @@ export function Work() {
             <article key={w.title} className="w-[72vw] shrink-0 snap-start sm:w-[42vw] lg:w-[min(21rem,24vw)]">
               <div className="aspect-[4/5] w-full">
                 {w.media ? (
-                  <MediaSlot media={w.media} alt={`${w.title}, ${w.detail}`} />
+                  <MediaSlot
+                    media={w.media}
+                    alt={`${w.title}, ${w.detail}`}
+                    fallback={<Poster title={w.title} tone={w.tone} tamil={w.tamil} />}
+                  />
                 ) : (
                   <Poster title={w.title} tone={w.tone} tamil={w.tamil} />
                 )}
               </div>
-              <h3 className="mt-4 font-display text-lg font-extrabold tracking-[-0.02em]">{w.title}</h3>
-              <p className="mt-1 text-sm text-muted">
-                <span className="font-bold text-orange-ink">{w.service}</span> <span className="text-dim">/</span> {w.detail}
-              </p>
+              <h3 className="sr-only">{w.title}</h3>
+              <div className="mt-4 border-t border-line pt-3">
+                <p className="t-label text-orange-ink">{w.service}</p>
+                <p className="mt-2 line-clamp-3 text-[0.9375rem] leading-snug text-muted">{w.caption}</p>
+              </div>
             </article>
           ))}
         </div>

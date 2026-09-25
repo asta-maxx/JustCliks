@@ -1,4 +1,6 @@
+import Image from "next/image";
 import type { FeedItem } from "@/lib/content";
+import { tamilTone } from "./Poster";
 
 const tone = {
   accent: "bg-orange text-on-orange",
@@ -25,6 +27,18 @@ export function FeedCard({ item }: { item: FeedItem }) {
       </PostFrame>
     );
   }
+  // Real artwork beats a type cover: show it, with the tag and name on a clean strip.
+  if (item.image) {
+    return (
+      <div className="@container relative h-full w-full overflow-hidden bg-fg">
+        <Image src={item.image} alt={item.title} fill sizes="(min-width: 1024px) 220px, 160px" className="object-cover" />
+        <div className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-2 bg-fg px-[6cqw] py-[4cqw] text-bg">
+          <span className="font-display text-[8cqw] font-extrabold tracking-[-0.03em]">{item.title}</span>
+          <span className="t-label text-[3.2cqw] opacity-80">{item.tag}</span>
+        </div>
+      </div>
+    );
+  }
   const long = item.title.length > 14;
   return (
     <PostFrame className={tone[item.tone]}>
@@ -33,7 +47,7 @@ export function FeedCard({ item }: { item: FeedItem }) {
         <span
           lang="ta"
           aria-hidden
-          className="absolute right-[7cqw] top-[16cqw] font-tamil text-[15cqw] font-bold leading-none opacity-20"
+          className={`absolute right-[7cqw] top-[16cqw] font-tamil text-[15cqw] font-bold leading-none ${tamilTone[item.tone]}`}
         >
           {item.tamil}
         </span>

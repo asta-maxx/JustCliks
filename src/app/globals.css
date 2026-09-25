@@ -101,7 +101,7 @@ body {
 @utility t-display {
   font-family: var(--font-cabinet), sans-serif;
   font-weight: 800;
-  font-size: clamp(2.75rem, 4.9vw, 4.5rem);
+  font-size: clamp(2.4rem, 4.9vw, 4.5rem);
   line-height: 1;
   letter-spacing: -0.035em;
 }
@@ -112,6 +112,7 @@ body {
   font-size: clamp(2rem, 3.4vw, 3.25rem);
   line-height: 1.04;
   letter-spacing: -0.03em;
+  text-wrap: pretty;
 }
 
 @utility t-h3 {
@@ -126,6 +127,7 @@ body {
   font-size: clamp(1.0625rem, 1.25vw, 1.25rem);
   line-height: 1.55;
   color: var(--muted);
+  text-wrap: pretty;
 }
 
 @utility t-label {
@@ -179,6 +181,14 @@ body {
     border-color: var(--fg);
     color: var(--bg);
   }
+  .btn-ink {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .btn-ink:hover {
+    background: var(--bg);
+    color: var(--fg);
+  }
   .link {
     text-decoration-line: underline;
     text-decoration-thickness: 1.5px;
@@ -187,6 +197,45 @@ body {
   }
   .link:hover {
     text-decoration-color: currentColor;
+  }
+}
+
+/* A dark block inside the light page. Every token flips, so components
+   inside render correctly without their own dark styles. */
+.theme-ink {
+  --bg: #1c1c1b;
+  --surface: #252523;
+  --surface-2: #302f2c;
+  --fg: #f5f3ee;
+  --muted: #aaa69e;
+  --dim: #77746d;
+  --line: rgb(245 243 238 / 0.14);
+  --line-strong: rgb(245 243 238 / 0.35);
+  --orange-ink: #f68c25;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* A full orange block. Ink on orange; anything that was orange turns ink. */
+.theme-orange {
+  --bg: #f68c25;
+  --surface: #ec8119;
+  --fg: #1c1c1b;
+  --muted: rgb(28 28 27 / 0.78);
+  --line: rgb(28 28 27 / 0.22);
+  --line-strong: rgb(28 28 27 / 0.45);
+  --orange: #1c1c1b;
+  --orange-ink: #1c1c1b;
+  --on-orange: #f68c25;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Section rhythm: one vertical spacing for every section */
+@utility section-y {
+  padding-block: 6rem;
+  @media (width >= 48rem) {
+    padding-block: 8rem;
   }
 }
 
@@ -204,6 +253,15 @@ body {
   background: var(--orange);
   transform-origin: left center;
   transform: scaleX(var(--mark, 1));
+}
+
+/* The hero wall fades out on all four edges */
+.wall-mask {
+  mask-image:
+    linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
 }
 
 /* Soft top and bottom fade on the feed window */

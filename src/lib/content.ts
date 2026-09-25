@@ -112,6 +112,9 @@ export type WorkItem = {
   title: string;
   detail: string;
   service: string;
+  serviceKey: ServiceKey;
+  format: "reel" | "post" | "carousel";
+  caption: string;
   tone: Tone;
   tamil?: string;
   // Drop real footage in /public/work and point to it here, e.g.
@@ -122,6 +125,9 @@ export type WorkItem = {
 export const work: WorkItem[] = [
   {
     title: "Tamil Christian song",
+    serviceKey: "video",
+    format: "reel",
+    caption: "A new Tamil Christian song, produced end to end. We handled the concept, the shoot, the edit and the final colour grade.",
     detail: "Full music video, shoot to final cut",
     service: "Video production",
     tone: "ink",
@@ -129,12 +135,19 @@ export const work: WorkItem[] = [
   },
   {
     title: "LIK",
+    media: { kind: "image", src: "/work/LIK.jpeg" },
+    serviceKey: "influencer",
+    format: "reel",
+    caption: "Creator-led promotion for LIK, Love Insurance Kompany. We picked creators whose audiences go to the movies, briefed them properly and kept every post on schedule.",
     detail: "Film promotion through creators",
     service: "Influencer marketing",
     tone: "accent",
   },
   {
     title: "Aasife and Brothers Biriyani",
+    serviceKey: "social",
+    format: "carousel",
+    caption: "We run the Aasife and Brothers page every month, and brought in creators for a campaign on top. More biriyani on more feeds.",
     detail: "Monthly social plus a creator campaign",
     service: "Social media and influencer",
     tone: "paper",
@@ -142,36 +155,54 @@ export const work: WorkItem[] = [
   },
   {
     title: "Joel Prince",
+    serviceKey: "personal",
+    format: "post",
+    caption: "Personal branding for a purpose coach. We shaped Joel's story and help him tell it on camera, week after week.",
     detail: "Personal brand for a purpose coach",
     service: "Personal branding",
     tone: "ink",
   },
   {
     title: "Senthil Balaji",
+    serviceKey: "influencer",
+    format: "reel",
+    caption: "An influencer campaign, planned and briefed by us, with creators chosen for the audience it needed to reach.",
     detail: "Influencer campaign",
     service: "Influencer marketing",
     tone: "accent",
   },
   {
     title: "Five caterers",
+    serviceKey: "social",
+    format: "carousel",
+    caption: "NS, Krishna, Sowndarya, Dharma and Meenakshi Catering all trust us with their social media. Five kitchens, five different feeds.",
     detail: "NS, Krishna, Sowndarya, Dharma and Meenakshi Catering",
     service: "Social media management",
     tone: "paper",
   },
   {
     title: "New car shoot",
+    serviceKey: "video",
+    format: "reel",
+    caption: "A launch video for a new car, shot and cut for social.",
     detail: "Launch video for social",
     service: "Video production",
     tone: "ink",
   },
   {
     title: "Ajay",
+    serviceKey: "personal",
+    format: "post",
+    caption: "Ajay founded Naina Kadai. We are making him the face of it, on camera and on the feed.",
     detail: "Founder of Naina Kadai",
     service: "Personal branding",
     tone: "accent",
   },
   {
     title: "Openings and birthdays",
+    serviceKey: "video",
+    format: "reel",
+    caption: "Event films for shop openings and birthdays, cut short and sharp for the feed.",
     detail: "Event films for shop launches and celebrations",
     service: "Video production",
     tone: "paper",
@@ -184,12 +215,14 @@ export type FeedItem = {
   tag: string;
   tone: Tone;
   tamil?: string;
+  // A real cover for the post, when we have one.
+  image?: string;
 };
 
 // Real client posts, the ones the feed stops on.
 const clientPosts: FeedItem[] = [
   { kind: "client", title: "Aasife and Brothers Biriyani", tag: "Social media", tone: "accent", tamil: "பிரியாணி" },
-  { kind: "client", title: "LIK", tag: "Influencer campaign", tone: "ink" },
+  { kind: "client", title: "LIK", tag: "Influencer campaign", tone: "ink", image: "/work/LIK.jpeg" },
   { kind: "client", title: "Tamil Christian song", tag: "Video production", tone: "accent", tamil: "பாடல்" },
   { kind: "client", title: "Joel Prince", tag: "Personal branding", tone: "ink" },
   { kind: "client", title: "Meenakshi Catering", tag: "Social media", tone: "accent" },
@@ -243,3 +276,40 @@ export const goals: { id: string; label: string; services: ServiceKey[] }[] = [
   { id: "brand", label: "A brand that looks the part", services: ["branding"] },
   { id: "film", label: "A song, event or shoot filmed", services: ["video"] },
 ];
+
+// "Tagged": everyone JustCliks has worked with, and what for.
+export const tagged: { name: string; did: string; tone: Tone }[] = [
+  { name: "Aasife and Brothers Biriyani", did: "Social media and creators", tone: "accent" },
+  { name: "Meat Mr. Dosa", did: "Social media", tone: "ink" },
+  { name: "2021 Mobiles", did: "Social media", tone: "paper" },
+  { name: "NS Catering", did: "Social media", tone: "accent" },
+  { name: "Krishna Catering", did: "Social media", tone: "ink" },
+  { name: "Sowndarya Catering", did: "Social media", tone: "paper" },
+  { name: "Dharma Catering", did: "Social media", tone: "accent" },
+  { name: "Meenakshi Catering", did: "Social media", tone: "ink" },
+  { name: "Senthil Balaji", did: "Influencer campaign", tone: "paper" },
+  { name: "Pollachi Mahendran", did: "Influencer campaign", tone: "accent" },
+  { name: "Ilyzly", did: "Influencer campaign", tone: "ink" },
+  { name: "Supreme", did: "Influencer campaign", tone: "paper" },
+  { name: "LIK", did: "Film promotion with creators", tone: "accent" },
+  { name: "Ne Forever", did: "Influencer campaign", tone: "ink" },
+  { name: "Naina Kadai", did: "Personal branding for Ajay", tone: "paper" },
+  { name: "Joel Prince", did: "Personal branding", tone: "accent" },
+];
+
+// Profile counts, all taken from the client list above.
+export const counts = [
+  { n: 16, label: "Clients" },
+  { n: 8, label: "Feeds we run" },
+  { n: 7, label: "Creator campaigns" },
+];
+
+// Short labels for the highlight tiles, keyed by service.
+export const highlightLabel: Record<ServiceKey, string> = {
+  social: "Social",
+  content: "Content",
+  influencer: "Creators",
+  video: "Video",
+  personal: "Founders",
+  branding: "Branding",
+};

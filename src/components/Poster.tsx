@@ -6,6 +6,13 @@ export const toneClass: Record<Tone, string> = {
   paper: "bg-surface-2 text-fg",
 };
 
+// Tamil lettering: an orange accent on dark or grey, a faint watermark on orange.
+export const tamilTone: Record<Tone, string> = {
+  accent: "opacity-20",
+  ink: "text-orange",
+  paper: "text-orange",
+};
+
 type Props = { title: string; tone: Tone; tag?: string; tamil?: string };
 
 const titleSize = (t: string) => (t.length <= 4 ? "text-[30cqw]" : t.length <= 14 ? "text-[14cqw]" : "text-[11.5cqw]");
@@ -20,7 +27,7 @@ export function Poster({ title, tone, tag, tamil }: Props) {
           <span
             lang="ta"
             aria-hidden
-            className={`pointer-events-none absolute right-[7cqw] top-[12cqw] font-tamil font-bold leading-none opacity-20 ${tamil.length > 5 ? "text-[14cqw]" : "text-[20cqw]"}`}
+            className={`pointer-events-none absolute right-[7cqw] top-[12cqw] font-tamil font-bold leading-none ${tamilTone[tone]} ${tamil.length > 5 ? "text-[14cqw]" : "text-[20cqw]"}`}
           >
             {tamil}
           </span>

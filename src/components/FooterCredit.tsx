@@ -1,14 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { Aperture } from "@phosphor-icons/react";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 const decoys = ["a template", "some agency", "an AI prompt", "a cousin", "a free theme"];
 const reel = [...decoys, ...decoys, "Allen"];
 
 // The site credit is a tiny scroll stopper: the slot races past the usual
-// suspects, blurs, and brakes on the real name. Clik to roll it again.
+// suspects, blurs, and brakes on the real name. It plays once, on arrival.
 export function FooterCredit() {
   const root = useRef<HTMLDivElement>(null);
   const slot = useRef<HTMLSpanElement>(null);
@@ -113,7 +112,7 @@ export function FooterCredit() {
                   className={`credit-item block w-max whitespace-nowrap leading-[1.5em] ${
                     i === reel.length - 1
                       ? "font-display font-extrabold tracking-[-0.02em] text-fg underline decoration-orange decoration-[3px] underline-offset-[0.22em] group-hover:decoration-fg"
-                      : "text-muted/70"
+                      : "text-muted"
                   }`}
                 >
                   {w}
@@ -126,15 +125,6 @@ export function FooterCredit() {
 
       <p className="credit-after text-muted">Stopped on the right one.</p>
 
-      <button
-        type="button"
-        onClick={() => roll.current()}
-        aria-label="Roll the credit again"
-        className="inline-flex items-center gap-1.5 border border-line px-2 py-1 text-xs font-bold text-fg hover:border-fg hover:bg-fg hover:text-bg motion-reduce:hidden"
-      >
-        <Aperture size={14} weight="bold" aria-hidden />
-        Clik
-      </button>
     </div>
   );
 }

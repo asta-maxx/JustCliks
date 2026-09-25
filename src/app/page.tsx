@@ -3,6 +3,7 @@ import { ClientBand } from "@/components/ClientBand";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { Manifesto } from "@/components/Manifesto";
+import { MobileCTA } from "@/components/MobileCTA";
 import { Nav } from "@/components/Nav";
 import { Services } from "@/components/Services";
 import { Stats } from "@/components/Stats";
@@ -22,6 +23,7 @@ export default function Home() {
         <Brief />
       </main>
       <Footer />
+      <MobileCTA />
     </>
   );
 }

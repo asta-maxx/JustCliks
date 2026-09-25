@@ -112,8 +112,8 @@ export function Services() {
   const Visual = visuals[s.key];
 
   return (
-    <section ref={root} id="services" aria-labelledby="services-title" className="scroll-mt-[4.5rem]">
-      <div className="wrap pt-24 md:pt-28">
+    <section ref={root} id="services" aria-labelledby="services-title" className="theme-ink scroll-mt-[4.5rem]">
+      <div className="wrap pt-24 md:pt-32">
         <div className="grid gap-6 lg:grid-cols-12">
           <h2 id="services-title" className="t-h2 lg:col-span-6">
             Six ways we get you noticed.
@@ -124,7 +124,7 @@ export function Services() {
 
       {/* Desktop */}
       <div ref={pin} className="hidden lg:block">
-        <div className="wrap grid h-[calc(100svh-4.5rem)] grid-cols-12 content-center gap-10 py-10">
+        <div className="wrap grid h-[calc(100svh-4.5rem)] grid-cols-12 content-center gap-10 py-10 pb-16">
           <ol className="col-span-4 self-center border-t border-line">
             {services.map((svc, i) => (
               <li key={svc.key} className="border-b border-line">
@@ -132,7 +132,7 @@ export function Services() {
                   type="button"
                   onClick={() => go(i)}
                   aria-current={i === active ? "true" : undefined}
-                  className={`flex w-full items-baseline gap-4 py-4 text-left ${i === active ? "text-fg" : "text-muted/70 hover:text-fg"}`}
+                  className={`flex w-full items-baseline gap-4 py-4 text-left ${i === active ? "text-fg" : "text-muted hover:text-fg"}`}
                 >
                   <span className={`t-label ${i === active ? "text-orange-ink" : ""}`}>{num(i)}</span>
                   <span className="font-display text-[1.375rem] font-extrabold tracking-[-0.02em]">{svc.name}</span>
@@ -152,7 +152,7 @@ export function Services() {
       </div>
 
       {/* Mobile, tablet */}
-      <div className="wrap grid grid-cols-[minmax(0,1fr)] gap-14 pb-24 pt-12 lg:hidden">
+      <div className="wrap grid grid-cols-[minmax(0,1fr)] gap-14 pb-24 pt-12 md:pb-32 lg:hidden">
         {services.map((svc, i) => (
           <MobileBlock key={svc.key} s={svc} i={i} />
         ))}
